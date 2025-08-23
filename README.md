@@ -60,8 +60,8 @@ SuperClaude is a **meta-programming configuration framework** that transforms Cl
 | Method | Command | Best For |
 |:------:|---------|----------|
 | **🐍 pipx** | `pipx install SuperClaude && pipx upgrade SuperClaude && SuperClaude install` | **✅ Recommended** - Linux/macOS |
-| **📦 pip** | `pip install SuperClaude && pip upgrade SuperClaude && SuperClaude install` | Traditional Python environments |
-| **🌐 npm** | `npm install -g @bifrost_inc/superclaude && superclaude install` | Cross-platform, Node.js users |
+| **📦 pip**  | `pip install SuperClaude && pip upgrade SuperClaude && SuperClaude install` | Traditional Python environments |
+| **🌐 npm**  | `npm install -g @bifrost_inc/superclaude && superclaude install` | Cross-platform, Node.js users |
 
 </div>
 
