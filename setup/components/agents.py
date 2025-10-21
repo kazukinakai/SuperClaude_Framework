@@ -1,8 +1,5 @@
 """
-Agent Personas Component
-
-Responsibility: Defines AI agent personalities and role-based behaviors.
-Provides specialized personas for different task types.
+Agents component for SuperClaude specialized AI agents installation
 """
 
 from typing import Dict, List, Tuple, Optional, Any
@@ -12,7 +9,7 @@ from ..core.base import Component
 from setup import __version__
 
 
-class AgentPersonasComponent(Component):
+class AgentsComponent(Component):
     """SuperClaude specialized AI agents component"""
 
     def __init__(self, install_dir: Optional[Path] = None):
@@ -136,7 +133,7 @@ class AgentPersonasComponent(Component):
 
     def get_dependencies(self) -> List[str]:
         """Get component dependencies"""
-        return ["knowledge_base"]
+        return ["framework_docs"]
 
     def update(self, config: Dict[str, Any]) -> bool:
         """

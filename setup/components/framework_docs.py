@@ -1,9 +1,6 @@
 """
-Knowledge Base Component for SuperClaude
-
-Responsibility: Provides structured knowledge initialization for the framework.
-Manages framework knowledge documents (principles, rules, flags, research config, business patterns).
-These files form the foundation of Claude's understanding of the SuperClaude framework.
+Framework documentation component for SuperClaude
+Manages core framework documentation files (CLAUDE.md, FLAGS.md, PRINCIPLES.md, etc.)
 """
 
 from typing import Dict, List, Tuple, Optional, Any
@@ -15,25 +12,20 @@ from ..services.claude_md import CLAUDEMdService
 from setup import __version__
 
 
-class KnowledgeBaseComponent(Component):
-    """
-    Knowledge Base Component
-
-    Responsibility: Initialize and maintain SuperClaude's knowledge base.
-    Installs framework knowledge documents that guide Claude's behavior and decision-making.
-    """
+class FrameworkDocsComponent(Component):
+    """SuperClaude framework documentation files component"""
 
     def __init__(self, install_dir: Optional[Path] = None):
-        """Initialize knowledge base component"""
+        """Initialize framework docs component"""
         super().__init__(install_dir)
 
     def get_metadata(self) -> Dict[str, str]:
         """Get component metadata"""
         return {
-            "name": "knowledge_base",
+            "name": "framework_docs",
             "version": __version__,
-            "description": "SuperClaude knowledge base (principles, rules, flags, patterns)",
-            "category": "knowledge",
+            "description": "SuperClaude framework documentation (CLAUDE.md, FLAGS.md, PRINCIPLES.md, RULES.md, etc.)",
+            "category": "documentation",
         }
 
     def is_reinstallable(self) -> bool:
@@ -43,74 +35,6 @@ class KnowledgeBaseComponent(Component):
         """
         return True
 
-    def validate_prerequisites(
-        self, installSubPath: Optional[Path] = None
-    ) -> Tuple[bool, List[str]]:
-        """
-        Check prerequisites for framework docs component (multi-directory support)
-
-        Returns:
-            Tuple of (success: bool, error_messages: List[str])
-        """
-        from ..utils.security import SecurityValidator
-
-        errors = []
-
-        # Check if all source directories exist
-        for source_dir in self._get_source_dirs():
-            if not source_dir.exists():
-                errors.append(f"Source directory not found: {source_dir}")
-
-        # Check if all required framework files exist
-        missing_files = []
-        for source, _ in self.get_files_to_install():
-            if not source.exists():
-                missing_files.append(str(source.relative_to(Path(__file__).parent.parent.parent / "superclaude")))
-
-        if missing_files:
-            errors.append(f"Missing component files: {missing_files}")
-
-        # Check write permissions to install directory
-        has_perms, missing = SecurityValidator.check_permissions(
-            self.install_dir, {"write"}
-        )
-        if not has_perms:
-            errors.append(f"No write permissions to {self.install_dir}: {missing}")
-
-        # Validate installation target
-        is_safe, validation_errors = SecurityValidator.validate_installation_target(
-            self.install_component_subdir
-        )
-        if not is_safe:
-            errors.extend(validation_errors)
-
-        # Validate files individually (each file with its own source dir)
-        for source, target in self.get_files_to_install():
-            # Get the appropriate base source directory for this file
-            source_parent = source.parent
-
-            # Validate source path
-            is_safe, msg = SecurityValidator.validate_path(source, source_parent)
-            if not is_safe:
-                errors.append(f"Invalid source path {source}: {msg}")
-
-            # Validate target path
-            is_safe, msg = SecurityValidator.validate_path(target, self.install_component_subdir)
-            if not is_safe:
-                errors.append(f"Invalid target path {target}: {msg}")
-
-            # Validate file extension
-            is_allowed, msg = SecurityValidator.validate_file_extension(source)
-            if not is_allowed:
-                errors.append(f"File {source}: {msg}")
-
-        if not self.file_manager.ensure_directory(self.install_component_subdir):
-            errors.append(
-                f"Could not create install directory: {self.install_component_subdir}"
-            )
-
-        return len(errors) == 0, errors
-
     def get_metadata_modifications(self) -> Dict[str, Any]:
         """Get metadata modifications for SuperClaude"""
         return {
@@ -119,7 +43,7 @@ class KnowledgeBaseComponent(Component):
                 "name": "superclaude",
                 "description": "AI-enhanced development framework for Claude Code",
                 "installation_type": "global",
-                "components": ["knowledge_base"],
+                "components": ["framework_docs"],
             },
             "superclaude": {
                 "enabled": True,
@@ -130,8 +54,8 @@ class KnowledgeBaseComponent(Component):
         }
 
     def _install(self, config: Dict[str, Any]) -> bool:
-        """Install knowledge base component"""
-        self.logger.info("Installing SuperClaude knowledge base...")
+        """Install framework docs component"""
+        self.logger.info("Installing SuperClaude framework documentation...")
 
         return super()._install(config)
 
@@ -144,7 +68,7 @@ class KnowledgeBaseComponent(Component):
 
             # Add component registration to metadata (with file list for sync)
             self.settings_manager.add_component_registration(
-                "knowledge_base",
+                "framework_docs",
                 {
                     "version": __version__,
                     "category": "documentation",
@@ -153,7 +77,7 @@ class KnowledgeBaseComponent(Component):
                 },
             )
 
-            self.logger.info("Updated metadata with knowledge base component registration")
+            self.logger.info("Updated metadata with framework docs component registration")
 
             # Migrate any existing SuperClaude data from settings.json
             if self.settings_manager.migrate_superclaude_data():
@@ -185,24 +109,24 @@ class KnowledgeBaseComponent(Component):
         return True
 
     def uninstall(self) -> bool:
-        """Uninstall knowledge base component"""
+        """Uninstall framework docs component"""
         try:
-            self.logger.info("Uninstalling SuperClaude knowledge base component...")
+            self.logger.info("Uninstalling SuperClaude framework docs component...")
 
             # Remove framework files
             removed_count = 0
             for filename in self.component_files:
-                file_path = self.install_component_subdir / filename
+                file_path = self.install_dir / filename
                 if self.file_manager.remove_file(file_path):
                     removed_count += 1
                     self.logger.debug(f"Removed {filename}")
                 else:
                     self.logger.warning(f"Could not remove {filename}")
 
-            # Update metadata to remove knowledge base component
+            # Update metadata to remove framework docs component
             try:
-                if self.settings_manager.is_component_installed("knowledge_base"):
-                    self.settings_manager.remove_component_registration("knowledge_base")
+                if self.settings_manager.is_component_installed("framework_docs"):
+                    self.settings_manager.remove_component_registration("framework_docs")
                     metadata_mods = self.get_metadata_modifications()
                     metadata = self.settings_manager.load_metadata()
                     for key in metadata_mods.keys():
@@ -210,7 +134,7 @@ class KnowledgeBaseComponent(Component):
                             del metadata[key]
 
                     self.settings_manager.save_metadata(metadata)
-                    self.logger.info("Removed knowledge base component from metadata")
+                    self.logger.info("Removed framework docs component from metadata")
             except Exception as e:
                 self.logger.warning(f"Could not update metadata: {e}")
 
@@ -220,26 +144,26 @@ class KnowledgeBaseComponent(Component):
             return True
 
         except Exception as e:
-            self.logger.exception(f"Unexpected error during knowledge base uninstallation: {e}")
+            self.logger.exception(f"Unexpected error during framework docs uninstallation: {e}")
             return False
 
     def get_dependencies(self) -> List[str]:
-        """Get component dependencies (knowledge base has none)"""
+        """Get component dependencies (framework docs has none)"""
         return []
 
     def update(self, config: Dict[str, Any]) -> bool:
         """
-        Sync knowledge base component (overwrite + delete obsolete files).
+        Sync framework docs component (overwrite + delete obsolete files).
         No backup needed - SuperClaude source files are always authoritative.
         """
         try:
-            self.logger.info("Syncing SuperClaude knowledge base component...")
+            self.logger.info("Syncing SuperClaude framework docs component...")
 
             # Get previously installed files from metadata
             metadata = self.settings_manager.load_metadata()
             previous_files = set(
                 metadata.get("components", {})
-                .get("knowledge_base", {})
+                .get("framework_docs", {})
                 .get("files", [])
             )
 
@@ -252,7 +176,7 @@ class KnowledgeBaseComponent(Component):
             # Delete obsolete files
             deleted_count = 0
             for filename in files_to_delete:
-                file_path = self.install_component_subdir / filename
+                file_path = self.install_dir / filename
                 if file_path.exists():
                     try:
                         file_path.unlink()
@@ -267,7 +191,7 @@ class KnowledgeBaseComponent(Component):
             if success:
                 # Update metadata with current file list
                 self.settings_manager.add_component_registration(
-                    "knowledge_base",
+                    "framework_docs",
                     {
                         "version": __version__,
                         "category": "documentation",
@@ -285,27 +209,27 @@ class KnowledgeBaseComponent(Component):
             return success
 
         except Exception as e:
-            self.logger.exception(f"Unexpected error during knowledge base sync: {e}")
+            self.logger.exception(f"Unexpected error during framework docs sync: {e}")
             return False
 
     def validate_installation(self) -> Tuple[bool, List[str]]:
-        """Validate knowledge base component installation"""
+        """Validate framework docs component installation"""
         errors = []
 
         # Check if all framework files exist
         for filename in self.component_files:
-            file_path = self.install_component_subdir / filename
+            file_path = self.install_dir / filename
             if not file_path.exists():
                 errors.append(f"Missing framework file: {filename}")
             elif not file_path.is_file():
                 errors.append(f"Framework file is not a regular file: {filename}")
 
         # Check metadata registration
-        if not self.settings_manager.is_component_installed("knowledge_base"):
-            errors.append("Knowledge base component not registered in metadata")
+        if not self.settings_manager.is_component_installed("framework_docs"):
+            errors.append("Framework docs component not registered in metadata")
         else:
             # Check version matches
-            installed_version = self.settings_manager.get_component_version("knowledge_base")
+            installed_version = self.settings_manager.get_component_version("framework_docs")
             expected_version = self.get_metadata()["version"]
             if installed_version != expected_version:
                 errors.append(
@@ -327,78 +251,22 @@ class KnowledgeBaseComponent(Component):
 
         return len(errors) == 0, errors
 
-    def _get_source_dirs(self):
-        """Get source directories for framework documentation files"""
-        # Assume we're in superclaude/setup/components/framework_docs.py
-        # Framework files are organized in superclaude/{framework,business,research}
-        project_root = Path(__file__).parent.parent.parent
-        return [
-            project_root / "superclaude" / "framework",
-            project_root / "superclaude" / "business",
-            project_root / "superclaude" / "research",
-        ]
-
     def _get_source_dir(self):
-        """Get source directory (compatibility method, returns first directory)"""
-        dirs = self._get_source_dirs()
-        return dirs[0] if dirs else None
-
-    def _discover_component_files(self) -> List[str]:
-        """
-        Discover framework .md files across multiple directories
-
-        Returns:
-            List of relative paths (e.g., ['framework/flags.md', 'business/examples.md'])
-        """
-        all_files = []
-        project_root = Path(__file__).parent.parent.parent / "superclaude"
-
-        for source_dir in self._get_source_dirs():
-            if not source_dir.exists():
-                self.logger.warning(f"Source directory not found: {source_dir}")
-                continue
-
-            # Get directory name relative to superclaude/
-            dir_name = source_dir.relative_to(project_root)
-
-            # Discover .md files in this directory
-            files = self._discover_files_in_directory(
-                source_dir,
-                extension=".md",
-                exclude_patterns=["README.md", "CHANGELOG.md", "LICENSE.md"],
-            )
-
-            # Add directory prefix to each file
-            for file in files:
-                all_files.append(str(dir_name / file))
-
-        return all_files
-
-    def get_files_to_install(self) -> List[Tuple[Path, Path]]:
-        """
-        Return list of files to install from multiple source directories
-
-        Returns:
-            List of tuples (source_path, target_path)
-        """
-        files = []
-        project_root = Path(__file__).parent.parent.parent / "superclaude"
-
-        for relative_path in self.component_files:
-            source = project_root / relative_path
-            # Install to superclaude/ subdirectory structure
-            target = self.install_component_subdir / relative_path
-            files.append((source, target))
-
-        return files
+        """Get source directory for framework documentation files"""
+        # Assume we're in superclaude/setup/components/framework_docs.py
+        # and framework files are in superclaude/superclaude/core/
+        project_root = Path(__file__).parent.parent.parent
+        return project_root / "superclaude" / "core"
 
     def get_size_estimate(self) -> int:
         """Get estimated installation size"""
         total_size = 0
+        source_dir = self._get_source_dir()
 
-        for source, _ in self.get_files_to_install():
-            if source.exists():
-                total_size += source.stat().st_size
+        for filename in self.component_files:
+            file_path = source_dir / filename
+            if file_path.exists():
+                total_size += file_path.stat().st_size
 
         # Add overhead for settings.json and directories
         total_size += 10240  # ~10KB overhead

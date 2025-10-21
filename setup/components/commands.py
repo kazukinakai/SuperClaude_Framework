@@ -1,8 +1,5 @@
 """
-Slash Commands Component
-
-Responsibility: Registers and manages slash commands for CLI interactions.
-Provides custom command definitions and execution logic.
+Commands component for SuperClaude slash command definitions
 """
 
 from typing import Dict, List, Tuple, Optional, Any
@@ -12,7 +9,7 @@ from ..core.base import Component
 from setup import __version__
 
 
-class SlashCommandsComponent(Component):
+class CommandsComponent(Component):
     """SuperClaude slash commands component"""
 
     def __init__(self, install_dir: Optional[Path] = None):
@@ -183,7 +180,7 @@ class SlashCommandsComponent(Component):
 
     def get_dependencies(self) -> List[str]:
         """Get dependencies"""
-        return ["knowledge_base"]
+        return ["framework_docs"]
 
     def update(self, config: Dict[str, Any]) -> bool:
         """
@@ -283,66 +280,6 @@ class SlashCommandsComponent(Component):
         # and command files are in superclaude/superclaude/Commands/
         project_root = Path(__file__).parent.parent.parent
         return project_root / "superclaude" / "commands"
-
-    def _discover_component_files(self) -> List[str]:
-        """
-        Discover command files including modules subdirectory
-
-        Returns:
-            List of relative file paths (e.g., ['pm.md', 'modules/token-counter.md'])
-        """
-        source_dir = self._get_source_dir()
-
-        if not source_dir or not source_dir.exists():
-            return []
-
-        files = []
-
-        # Discover top-level .md files (slash commands)
-        for file_path in source_dir.iterdir():
-            if (
-                file_path.is_file()
-                and file_path.suffix.lower() == ".md"
-                and file_path.name not in ["README.md", "CHANGELOG.md", "LICENSE.md"]
-            ):
-                files.append(file_path.name)
-
-        # Discover modules subdirectory files
-        modules_dir = source_dir / "modules"
-        if modules_dir.exists() and modules_dir.is_dir():
-            for file_path in modules_dir.iterdir():
-                if file_path.is_file() and file_path.suffix.lower() == ".md":
-                    # Store as relative path: modules/token-counter.md
-                    files.append(f"modules/{file_path.name}")
-
-        # Sort for consistent ordering
-        files.sort()
-
-        self.logger.debug(
-            f"Discovered {len(files)} command files (including modules)"
-        )
-        if files:
-            self.logger.debug(f"Files found: {files}")
-
-        return files
-
-    def get_files_to_install(self) -> List[Tuple[Path, Path]]:
-        """
-        Return list of files to install, including modules subdirectory
-
-        Returns:
-            List of tuples (source_path, target_path)
-        """
-        source_dir = self._get_source_dir()
-        files = []
-
-        if source_dir:
-            for filename in self.component_files:
-                source = source_dir / filename
-                target = self.install_component_subdir / filename
-                files.append((source, target))
-
-        return files
 
     def get_size_estimate(self) -> int:
         """Get estimated installation size"""

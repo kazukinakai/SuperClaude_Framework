@@ -1,8 +1,5 @@
 """
-MCP Integration Component
-
-Responsibility: Integrates Model Context Protocol for external tool access.
-Manages connections to specialized MCP servers and capabilities.
+MCP component for MCP server integration
 """
 
 import os
@@ -18,7 +15,7 @@ from setup import __version__
 from ..core.base import Component
 
 
-class MCPIntegrationComponent(Component):
+class MCPComponent(Component):
     """MCP servers integration component"""
 
     def __init__(self, install_dir: Optional[Path] = None):
@@ -34,8 +31,8 @@ class MCPIntegrationComponent(Component):
                 "name": "airis-mcp-gateway",
                 "description": "Unified MCP Gateway with all tools (sequential-thinking, context7, magic, playwright, serena, morphllm, tavily, chrome-devtools, git, puppeteer)",
                 "install_method": "github",
-                "install_command": "uvx --from git+https://github.com/agiletec-inc/airis-mcp-gateway airis-mcp-gateway --help",
-                "run_command": "uvx --from git+https://github.com/agiletec-inc/airis-mcp-gateway airis-mcp-gateway",
+                "install_command": "uvx --from git+https://github.com/oraios/airis-mcp-gateway airis-mcp-gateway --help",
+                "run_command": "uvx --from git+https://github.com/oraios/airis-mcp-gateway airis-mcp-gateway",
                 "required": True,
             },
         }
@@ -944,7 +941,7 @@ class MCPIntegrationComponent(Component):
 
     def get_dependencies(self) -> List[str]:
         """Get dependencies"""
-        return ["knowledge_base"]
+        return ["framework_docs"]
 
     def update(self, config: Dict[str, Any]) -> bool:
         """Update MCP component"""
