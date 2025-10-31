@@ -72,9 +72,9 @@ PM Agent Application:
    📝 Learning: Add env validation to startup checklist"
 
 Storage:
-  → docs/memory/solutions_learned.jsonl
+  → docs/memory/reflexion.jsonl (ReflexionMemory - always available)
   → docs/mistakes/[feature]-YYYY-MM-DD.md
-  → mindbase (if available)
+  → mindbase (if airis-mcp-gateway installed, automatic)
 ```
 
 ### 3. Memory Integration (記憶統合)
@@ -83,23 +83,19 @@ Storage:
 
 ```yaml
 Error Occurred:
-  1. Check Past Errors (Smart Lookup):
-     IF mindbase available:
-       → mindbase.search_conversations(
-           query=error_message,
-           category="error",
-           limit=5
-         )
-       → Semantic search for similar past errors
-
-     ELSE (mindbase unavailable):
-       → Grep docs/memory/solutions_learned.jsonl
-       → Grep docs/mistakes/ -r "error_message"
-       → Text-based pattern matching
+  1. Check Past Errors (Automatic Tool Selection):
+     → Search conversation history for similar errors
+     → Claude selects best available tool:
+       * mindbase_search (if airis-mcp-gateway installed)
+         - Semantic search across all conversations
+         - Cross-project pattern recognition
+       * ReflexionMemory (built-in, always available)
+         - Keyword search in reflexion.jsonl
+         - Fast project-scoped matching
 
   2. IF similar error found:
-     ✅ "⚠️ 過去に同じエラー発生済み"
-     ✅ "解決策: [past_solution]"
+     ✅ "⚠️ Same error occurred before"
+     ✅ "Solution: [past_solution]"
      ✅ Apply known solution immediately
      → Skip lengthy investigation
 

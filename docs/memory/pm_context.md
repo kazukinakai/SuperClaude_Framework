@@ -32,7 +32,7 @@ SuperClaude is a comprehensive framework for Claude Code that provides:
 
 ### Intent Classification System
 ```yaml
-Ultra-Light (100-500 tokens):   "進捗", "progress", "status" → Layer 1 only
+Ultra-Light (100-500 tokens):   "progress", "status", "update" → Layer 1 only
 Light (500-2K tokens):          "typo", "rename", "comment" → Layer 2 (target file)
 Medium (2-5K tokens):           "bug", "fix", "refactor" → Layer 3 (related files)
 Heavy (5-20K tokens):           "feature", "architecture" → Layer 4 (subsystem)
@@ -52,10 +52,11 @@ Ultra-Heavy (20K+ tokens):      "redesign", "migration" → Layer 5 (full + rese
 - **Data**: task_type, complexity, workflow_id, tokens_used, time_ms, success
 - **Strategy**: ε-greedy (80% best workflow, 20% experimental)
 
-### mindbase Integration Incentive
-- **Layer 1**: 500 tokens (mindbase) vs 800 tokens (fallback) = **38% savings**
-- **Layer 3**: 3-4K tokens (mindbase) vs 4.5K tokens (fallback) = **20% savings**
-- **Total Potential**: Up to **90% token reduction** with semantic search (industry benchmark)
+### Error Learning & Memory Integration
+- **ReflexionMemory (built-in)**: Layer 1: 650 tokens | Layer 3: 3.5-4K tokens
+- **mindbase (optional)**: Layer 1: 500 tokens | Layer 3: 3-3.5K tokens (semantic search)
+- **Profile**: Requires airis-mcp-gateway "recommended" profile for mindbase
+- **Savings**: 20-35% with ReflexionMemory, additional 10-15% with mindbase enhancement
 
 ## Active Patterns
 
