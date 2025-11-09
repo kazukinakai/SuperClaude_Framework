@@ -1,4 +1,4 @@
-.PHONY: install test test-plugin doctor verify clean lint format build-plugin sync-plugin-repo help
+.PHONY: install test test-plugin doctor verify clean lint format build-plugin sync-plugin-repo uninstall-legacy help
 
 # Installation (local source, editable) - RECOMMENDED
 install:
@@ -126,5 +126,13 @@ help:
 	@echo ""
 	@echo "📚 Documentation:"
 	@echo "  make translate       - Translate README to Chinese and Japanese"
+	@echo ""
+	@echo "🧹 Cleanup:"
+	@echo "  make uninstall-legacy - Remove old SuperClaude files from ~/.claude"
 	@echo "  make help            - Show this help message"
+
+# Remove legacy SuperClaude files from ~/.claude directory
+uninstall-legacy:
+	@echo "🧹 Cleaning up legacy SuperClaude files..."
+	@bash scripts/uninstall_legacy.sh
 	@echo ""
