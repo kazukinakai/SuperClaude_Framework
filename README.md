@@ -14,7 +14,7 @@
 <a href="https://github.com/SuperClaude-Org/SuperQwen_Framework" target="_blank">
   <img src="https://img.shields.io/badge/Try-SuperQwen_Framework-orange" alt="Try SuperQwen Framework"/>
 </a>
-  <img src="https://img.shields.io/badge/version-4.2.0-blue" alt="Version">
+  <img src="https://img.shields.io/badge/version-4.1.6-blue" alt="Version">
   <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License">
   <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome">
 </p>
@@ -100,26 +100,44 @@ Claude Code is a product built and maintained by [Anthropic](https://www.anthrop
 
 ## ⚡ **Quick Installation**
 
-### **Project-Local Plugin (Recommended)**
+> **IMPORTANT**: The TypeScript plugin system described in older documentation is
+> not yet available (planned for v5.0). For current installation
+> instructions, please follow the steps below for v4.x.
 
-SuperClaude v2.0+ uses **TypeScript plugins** with project-local auto-detection:
+### **Current Stable Version (v4.1.6)**
 
+SuperClaude currently uses slash commands.
+
+**Option 1: pipx (Recommended)**
 ```bash
-# Clone repository
+# Install from PyPI
+pipx install superclaude
+
+# Install commands and components
+superclaude install
+```
+
+**Option 2: Direct Installation from Git**
+```bash
+# Clone the repository
 git clone https://github.com/SuperClaude-Org/SuperClaude_Framework.git
 cd SuperClaude_Framework
 
-# Start Claude Code in this directory
-claude
+# Run the installation script
+./install.sh
 ```
 
-**That's it!** `.claude-plugin/` is auto-detected and PM Agent activates on session start.
+### **Coming in v5.0 (In Development)**
 
-**Key Features**:
-- ✅ **Zero Install**: No copying, no configuration
-- ✅ **Hot Reload**: Edit TypeScript → Save → Instant reflection
-- ✅ **Auto-Activation**: PM Agent starts automatically (SessionStart hook)
-- ✅ **Safe Development**: Separate sandbox from global Claude Code
+We are actively working on a new TypeScript plugin system (see issue [#419](https://github.com/SuperClaude-Org/SuperClaude_Framework/issues/419) for details). When released, installation will be simplified to:
+
+```bash
+# This feature is not yet available
+/plugin marketplace add SuperClaude-Org/superclaude-plugin-marketplace
+/plugin install superclaude
+```
+
+**Status**: In development. No ETA has been set.
 
 ### **Enhanced Performance (Optional MCPs)**
 
@@ -144,69 +162,6 @@ For **2-3x faster** execution and **30-50% fewer tokens**, optionally install MC
 - **With MCPs**: 2-3x faster, 30-50% fewer tokens ⚡
 
 </div>
-
-<details>
-<summary><b>⚠️ IMPORTANT: Upgrading from SuperClaude V1.x (Slash Commands)</b></summary>
-
-**V2.0 introduces breaking changes - migration from slash commands to TypeScript plugins:**
-
-```bash
-# 1. Remove old slash commands (if installed)
-rm -rf ~/.claude/commands/sc/
-
-# 2. Use new plugin (project-local)
-cd SuperClaude_Framework
-claude  # .claude-plugin/ auto-detected
-```
-
-**What's New in V2.0:**
-- ✅ TypeScript plugins (hot reload support)
-- ✅ Project-local detection (zero install)
-- ✅ Auto-activation via SessionStart hook
-- ✅ 3 core plugins: PM Agent, Research, Index
-- ✅ Confidence-driven workflow (≥90% threshold, Precision/Recall 1.0)
-
-**Migration Notes:**
-- Old: `/sc:pm`, `/sc:research`, `/sc:index-repo` (27 commands)
-- New: `/pm`, `/research`, `/index-repo` (3 plugin commands)
-- Installation: Global `~/.claude/commands/` → Project-local `.claude-plugin/`
-- Just `cd` to project directory and run `claude`
-
-</details>
-
-<details>
-<summary><b>💡 Troubleshooting</b></summary>
-
-**Plugin not loading?**
-```bash
-# Verify you're in the project directory
-pwd  # Should show: /path/to/SuperClaude_Framework
-
-# Check .claude-plugin/ exists
-ls .claude-plugin/plugin.json
-
-# Restart Claude Code in this directory
-claude
-```
-
-**Commands not working (/pm, /research, /index-repo)?**
-- Ensure you started `claude` from the SuperClaude_Framework directory
-- Check for errors in Claude Code output
-- Verify `.claude-plugin/plugin.json` has correct structure
-
-**Hot reload not working?**
-- Edit `.claude-plugin/pm/index.ts`
-- Save file
-- Changes should reflect immediately (no restart needed)
-
-**Development mode (for contributors):**
-```bash
-# Install Python package for testing
-make install
-make verify
-uv run pytest
-```
-</details>
 
 ---
 
@@ -270,9 +225,9 @@ uv run pytest
 
 <div align="center">
 
-## 🎉 **What's New in V2.0**
+## 🎉 **What's New in v4.1**
 
-> *Version 2.0 brings architectural transformation: migration from 27 slash commands to 3 TypeScript plugins with hot reload and auto-activation.*
+> *Version 4.1 focuses on stabilizing the slash command architecture, enhancing agent capabilities, and improving documentation.*
 
 <table>
 <tr>
@@ -290,13 +245,12 @@ uv run pytest
 </td>
 <td width="50%">
 
-### 🔥 **TypeScript Plugins**
-**3 core plugins** with hot reload:
-- **PM Agent**: Confidence-driven orchestration (≥90% threshold)
-- **Research**: Deep web search with adaptive planning
-- **Index**: 94% token reduction (58K → 3K)
-- Auto-activation via SessionStart hook
-- Edit → Save → Instant reflection (no restart)
+### ⚡ **Optimized Performance**
+**Smaller framework, bigger projects:**
+- Reduced framework footprint
+- More context for your code
+- Longer conversations possible
+- Complex operations enabled
 
 </td>
 </tr>
@@ -332,22 +286,22 @@ uv run pytest
 <tr>
 <td width="50%">
 
-### ⚡ **Optimized Performance**
-**Smaller framework, bigger projects:**
-- Reduced framework footprint
-- More context for your code
-- Longer conversations possible
-- Complex operations enabled
-
-</td>
-<td width="50%">
-
 ### 📚 **Documentation Overhaul**
 **Complete rewrite** for developers:
 - Real examples & use cases
 - Common pitfalls documented
 - Practical workflows included
 - Better navigation structure
+
+</td>
+<td width="50%">
+
+### 🧪 **Enhanced Stability**
+**Focus on reliability:**
+- Bug fixes for core commands
+- Improved test coverage
+- More robust error handling
+- CI/CD pipeline improvements
 
 </td>
 </tr>
@@ -474,11 +428,11 @@ The Deep Research system intelligently coordinates multiple tools:
 </td>
 <td valign="top">
 
-- 🎯 [**Plugin Commands**](docs/user-guide/commands.md)
-  *3 core plugin commands*
+- 🎯 [**Slash Commands**](docs/user-guide/commands.md)
+  *Full list of `/sc` commands*
 
 - 🤖 [**Agents Guide**](docs/user-guide/agents.md)  
-  *15 specialized agents*
+  *16 specialized agents*
 
 - 🎨 [**Behavioral Modes**](docs/user-guide/modes.md)  
   *7 adaptive modes*
@@ -487,7 +441,7 @@ The Deep Research system intelligently coordinates multiple tools:
   *Control behaviors*
 
 - 🔧 [**MCP Servers**](docs/user-guide/mcp-servers.md)  
-  *7 server integrations*
+  *8 server integrations*
 
 - 💼 [**Session Management**](docs/user-guide/session-management.md)  
   *Save & restore state*

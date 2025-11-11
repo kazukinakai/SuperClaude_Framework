@@ -18,20 +18,19 @@ uv run python script.py          # Execute scripts
 
 ## 📂 Project Structure
 
-**Dual-language architecture**: TypeScript plugins for Claude Code integration + Python package for testing/CLI tools.
+> **⚠️ IMPORTANT**: The `.claude-plugin/` directory and TypeScript plugin system described in older docs **DO NOT EXIST** in v4.1.6.
+> This is planned for v5.0 (see [issue #419](https://github.com/SuperClaude-Org/SuperClaude_Framework/issues/419)).
+
+**Current v4.1.6 Architecture**: Python package with slash commands
 
 ```
-# TypeScript Plugins (project root)
-pm/                      # PM Agent: confidence checks, orchestration
-research/                # Deep Research: web search, adaptive planning
-index/                   # Repository indexing: 94% token reduction
-hooks/hooks.json         # SessionStart auto-activation config
-
-# Claude Code Configuration
-.claude/settings.json    # Marketplace and plugin settings
-.claude-plugin/          # Plugin manifest
-├── plugin.json          # Plugin metadata (3 commands: /pm, /research, /index-repo)
-└── tests/               # Plugin tests
+# Claude Code Configuration (v4.1.6)
+.claude/
+├── settings.json        # User settings
+└── commands/            # Slash commands (installed via `superclaude install`)
+    ├── pm.md
+    ├── research.md
+    └── index-repo.md
 
 # Python Package
 src/superclaude/         # Pytest plugin + CLI tools
@@ -40,11 +39,13 @@ src/superclaude/         # Pytest plugin + CLI tools
 ├── execution/           # parallel.py, reflection.py, self_correction.py
 └── cli/                 # main.py, doctor.py, install_skill.py
 
-# Command Definitions
-commands/                # Plugin command markdown files
-├── pm.md                # PM Agent command definition
-├── research.md          # Research command definition
-└── index-repo.md        # Index command definition
+# Plugin Development (planned for v5.0 - see docs/plugin-reorg.md)
+plugins/superclaude/     # Future plugin source (NOT ACTIVE)
+├── agents/              # Agent definitions
+├── commands/            # Command definitions
+├── hooks/               # Hook configurations
+├── scripts/             # Shell scripts
+└── skills/              # Skill implementations
 
 # Project Files
 tests/                   # Python test suite
@@ -119,20 +120,21 @@ Registered via `pyproject.toml` entry point, automatically available after insta
 - Automatic dependency analysis
 - Example: [Read files in parallel] → Analyze → [Edit files in parallel]
 
-### TypeScript Plugins (v2.0)
+### TypeScript Plugins (Planned for v5.0)
 
-**Location**: Plugin source lives under `plugins/superclaude/` with unified assets (agents, commands, hooks, skills).
-**Packaging**: `make build-plugin` renders `.claude-plugin/*` manifests into `dist/plugins/superclaude/`.
+> **⚠️ NOT IMPLEMENTED**: The TypeScript plugin system described below does not exist in v4.1.6.
+> This is planned for v5.0. See [issue #419](https://github.com/SuperClaude-Org/SuperClaude_Framework/issues/419) and `docs/plugin-reorg.md`.
 
-**Distributed commands**:
-- **/sc:agent**: Session orchestrator, auto-starts via hooks
-- **/sc:index-repo**: Repository indexing + PROJECT_INDEX generation
-- **/sc:research**: Deep research workflow with Tavily + Context7 integration
+**Current v4.1.6 Commands** (slash commands, not plugins):
+- Install via: `pipx install superclaude && superclaude install`
+- Commands installed to: `~/.claude/commands/`
+- Available commands: `/pm`, `/research`, `/index-repo` (and others)
 
-**Editing flow**:
-- Update agents/commands/hooks/skills in `plugins/superclaude/*`
-- Run `make build-plugin` locally to verify packaging
-- Optionally `make sync-plugin-repo` to push artefacts into `../SuperClaude_Plugin`
+**Planned Plugin Architecture** (v5.0 - NOT YET AVAILABLE):
+- Plugin source will live under `plugins/superclaude/`
+- `make build-plugin` will render `.claude-plugin/*` manifests
+- Project-local detection via `.claude-plugin/plugin.json`
+- Marketplace distribution support
 
 ## 🧪 Testing with PM Agent
 
@@ -244,49 +246,53 @@ Integrates with multiple MCP servers via **airis-mcp-gateway**.
 
 **Usage**: TypeScript plugins and Python pytest plugin can call MCP servers. Always prefer MCP tools over speculation for documentation/research.
 
-## 🚀 Plugin Development
+## 🚀 Development & Installation
 
-### Project-Local Plugin Detection
+### Current Installation Method (v4.1.6)
 
-This project uses **project-local plugin detection** (v2.0):
-- `.claude-plugin/plugin.json` is auto-detected when you start Claude Code in this directory
-- No global installation needed for development
-- PM Agent auto-activates via SessionStart hook
-
-### Plugin Architecture
-
-```
-Plugin Components:
-1. Manifest templates (`plugins/superclaude/manifest/*.template.json`)
-2. Command/agent assets (`plugins/superclaude/{commands,agents}/`)
-3. Skills (`plugins/superclaude/skills/`)
-4. Hooks & scripts (`plugins/superclaude/{hooks,scripts}/`)
-```
-
-### Development Workflow
-
+**Standard Installation**:
 ```bash
-# 1. Edit plugin source
-vim plugins/superclaude/commands/agent.md
-vim plugins/superclaude/skills/confidence-check/confidence.ts
+# Option 1: pipx (recommended)
+pipx install superclaude
+superclaude install
 
-# 2. Run packaging + smoke tests
-make build-plugin
-
-# 3. (optional) Sync generated artefacts into ../SuperClaude_Plugin
-make sync-plugin-repo
+# Option 2: Direct from repo
+git clone https://github.com/SuperClaude-Org/SuperClaude_Framework.git
+cd SuperClaude_Framework
+./install.sh
 ```
 
-### Global vs Project-Local
+**Development Mode**:
+```bash
+# Install in editable mode
+make dev
 
-**Project-Local**:
-- Work directly from `plugins/superclaude/`
-- Use `make build-plugin` for validation / artefact refresh
-- Launch Claude Code inside this repo to exercise commands hot-loaded from disk
+# Run tests
+make test
 
-**Distributed Package** (`../SuperClaude_Plugin`):
-- Generated output committed for marketplace distribution
-- Do not edit manually—regenerate via `make sync-plugin-repo`
+# Verify installation
+make verify
+```
+
+### Plugin System (Planned for v5.0 - NOT AVAILABLE)
+
+> **⚠️ IMPORTANT**: The plugin system described in older documentation **does not exist** in v4.1.6.
+> These features are planned for v5.0 (see [issue #419](https://github.com/SuperClaude-Org/SuperClaude_Framework/issues/419)).
+
+**What Does NOT Work** (yet):
+- ❌ `.claude-plugin/` directory auto-detection
+- ❌ `/plugin marketplace add` commands
+- ❌ `/plugin install superclaude`
+- ❌ `make build-plugin` (planned but not functional)
+- ❌ Project-local plugin detection
+
+**Future Plans** (v5.0):
+- Plugin marketplace distribution
+- TypeScript-based plugin architecture
+- Auto-detection via `.claude-plugin/plugin.json`
+- Build workflow via `make build-plugin`
+
+See `docs/plugin-reorg.md` and `docs/next-refactor-plan.md` for implementation plans.
 
 ## 📊 Package Information
 

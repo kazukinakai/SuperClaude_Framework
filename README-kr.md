@@ -5,7 +5,7 @@
 ### **Claude Code를 구조화된 개발 플랫폼으로 변환**
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-4.1.5-blue" alt="Version">
+  <img src="https://img.shields.io/badge/version-4.1.6-blue" alt="Version">
   <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License">
   <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome">
 </p>
