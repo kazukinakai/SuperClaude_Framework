@@ -125,10 +125,11 @@ superclaude doctor
 ```
 
 After installation, restart Claude Code to use the commands:
-- `/research` - Deep web research with parallel search
-- `/index-repo` - Repository indexing for context optimization
-- `/agent` - Specialized AI agents
-- `/recommend` - Command recommendations
+- `/sc:research` - Deep web research with parallel search
+- `/sc:index-repo` - Repository indexing for context optimization
+- `/sc:agent` - Specialized AI agents
+- `/sc:recommend` - Command recommendations
+- `/sc` - Show all available SuperClaude commands
 
 **Option 2: Direct Installation from Git**
 ```bash

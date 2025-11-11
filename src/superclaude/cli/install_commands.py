@@ -1,7 +1,7 @@
 """
 Command Installation
 
-Installs SuperClaude slash commands to ~/.claude/commands/ directory.
+Installs SuperClaude slash commands to ~/.claude/commands/sc/ directory.
 """
 
 from pathlib import Path
@@ -17,15 +17,15 @@ def install_commands(
     Install all SuperClaude commands to Claude Code
 
     Args:
-        target_path: Target installation directory (default: ~/.claude/commands)
+        target_path: Target installation directory (default: ~/.claude/commands/sc)
         force: Force reinstall if commands exist
 
     Returns:
         Tuple of (success: bool, message: str)
     """
-    # Default to ~/.claude/commands
+    # Default to ~/.claude/commands/sc to maintain /sc: namespace
     if target_path is None:
-        target_path = Path.home() / ".claude" / "commands"
+        target_path = Path.home() / ".claude" / "commands" / "sc"
 
     # Get command source directory
     command_source = _get_commands_source()
@@ -145,12 +145,12 @@ def list_available_commands() -> List[str]:
 
 def list_installed_commands() -> List[str]:
     """
-    List installed commands in ~/.claude/commands/
+    List installed commands in ~/.claude/commands/sc/
 
     Returns:
         List of installed command names
     """
-    commands_dir = Path.home() / ".claude" / "commands"
+    commands_dir = Path.home() / ".claude" / "commands" / "sc"
 
     if not commands_dir.exists():
         return []

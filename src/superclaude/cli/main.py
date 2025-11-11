@@ -28,8 +28,8 @@ def main():
 @main.command()
 @click.option(
     "--target",
-    default="~/.claude/commands",
-    help="Installation directory (default: ~/.claude/commands)",
+    default="~/.claude/commands/sc",
+    help="Installation directory (default: ~/.claude/commands/sc)",
 )
 @click.option(
     "--force",
@@ -46,8 +46,8 @@ def install(target: str, force: bool, list_only: bool):
     """
     Install SuperClaude commands to Claude Code
 
-    Installs all slash commands (/research, /index-repo, etc.) to your
-    ~/.claude/commands directory so you can use them in Claude Code.
+    Installs all slash commands (/sc:research, /sc:index-repo, etc.) to your
+    ~/.claude/commands/sc directory so you can use them in Claude Code.
 
     Examples:
         superclaude install
