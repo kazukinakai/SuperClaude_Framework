@@ -26,6 +26,69 @@ def main():
 
 
 @main.command()
+@click.option(
+    "--target",
+    default="~/.claude/commands",
+    help="Installation directory (default: ~/.claude/commands)",
+)
+@click.option(
+    "--force",
+    is_flag=True,
+    help="Force reinstall if commands already exist",
+)
+@click.option(
+    "--list",
+    "list_only",
+    is_flag=True,
+    help="List available commands without installing",
+)
+def install(target: str, force: bool, list_only: bool):
+    """
+    Install SuperClaude commands to Claude Code
+
+    Installs all slash commands (/research, /index-repo, etc.) to your
+    ~/.claude/commands directory so you can use them in Claude Code.
+
+    Examples:
+        superclaude install
+        superclaude install --force
+        superclaude install --list
+        superclaude install --target /custom/path
+    """
+    from .install_commands import (
+        install_commands,
+        list_available_commands,
+        list_installed_commands,
+    )
+
+    # List only mode
+    if list_only:
+        available = list_available_commands()
+        installed = list_installed_commands()
+
+        click.echo("📋 Available Commands:")
+        for cmd in available:
+            status = "✅ installed" if cmd in installed else "⬜ not installed"
+            click.echo(f"   /{cmd:20} {status}")
+
+        click.echo(f"\nTotal: {len(available)} available, {len(installed)} installed")
+        return
+
+    # Install commands
+    target_path = Path(target).expanduser()
+
+    click.echo(f"📦 Installing SuperClaude commands to {target_path}...")
+    click.echo()
+
+    success, message = install_commands(target_path=target_path, force=force)
+
+    click.echo(message)
+
+    if not success:
+        sys.exit(1)
+
+
+@main.command()
 @click.argument("skill_name")
 @click.option(
     "--target",

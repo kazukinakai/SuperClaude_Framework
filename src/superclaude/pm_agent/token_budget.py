@@ -37,8 +37,12 @@ class TokenBudgetManager:
         Args:
             complexity: Task complexity level (simple, medium, complex)
         """
+        # Validate complexity and default to "medium" if invalid
+        if complexity not in self.LIMITS:
+            complexity = "medium"
+
         self.complexity = complexity
-        self.limit = self.LIMITS.get(complexity, 1000)
+        self.limit = self.LIMITS[complexity]
         self.used = 0
 
     def allocate(self, amount: int) -> bool:

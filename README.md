@@ -15,6 +15,9 @@
   <img src="https://img.shields.io/badge/Try-SuperQwen_Framework-orange" alt="Try SuperQwen Framework"/>
 </a>
   <img src="https://img.shields.io/badge/version-4.1.6-blue" alt="Version">
+  <a href="https://github.com/SuperClaude-Org/SuperClaude_Framework/actions/workflows/test.yml">
+    <img src="https://github.com/SuperClaude-Org/SuperClaude_Framework/actions/workflows/test.yml/badge.svg" alt="Tests">
+  </a>
   <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License">
   <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome">
 </p>
@@ -113,9 +116,19 @@ SuperClaude currently uses slash commands.
 # Install from PyPI
 pipx install superclaude
 
-# Install commands and components
+# Install commands (installs /research, /index-repo, /agent, /recommend)
 superclaude install
+
+# Verify installation
+superclaude install --list
+superclaude doctor
 ```
+
+After installation, restart Claude Code to use the commands:
+- `/research` - Deep web research with parallel search
+- `/index-repo` - Repository indexing for context optimization
+- `/agent` - Specialized AI agents
+- `/recommend` - Command recommendations
 
 **Option 2: Direct Installation from Git**
 ```bash

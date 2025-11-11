@@ -98,12 +98,10 @@ Pipfile.lock
 # Poetry
 poetry.lock
 
-# Claude Code
-.claude/
-!.claude/
-.claude/*
-!.claude/settings.json
-CLAUDE.md
+# Claude Code - only ignore user-specific files
+.claude/history/
+.claude/cache/
+.claude/*.lock
 
 # SuperClaude specific
 .serena/
