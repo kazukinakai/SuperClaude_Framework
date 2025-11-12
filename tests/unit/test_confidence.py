@@ -5,6 +5,7 @@ Tests pre-execution confidence assessment functionality.
 """
 
 import pytest
+
 from superclaude.pm_agent.confidence import ConfidenceChecker
 
 

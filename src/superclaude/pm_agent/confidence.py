@@ -19,8 +19,8 @@ Required Checks:
     5. Root cause identified with high certainty
 """
 
-from typing import Dict, Any, Optional
 from pathlib import Path
+from typing import Any, Dict
 
 
 class ConfidenceChecker:

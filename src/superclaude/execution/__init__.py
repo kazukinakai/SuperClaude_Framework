@@ -17,10 +17,11 @@ Usage:
 """
 
 from pathlib import Path
-from typing import List, Dict, Any, Optional, Callable
-from .reflection import ReflectionEngine, ConfidenceScore, reflect_before_execution
-from .parallel import ParallelExecutor, Task, ExecutionPlan, should_parallelize
-from .self_correction import SelfCorrectionEngine, RootCause, learn_from_failure
+from typing import Any, Callable, Dict, List, Optional
+
+from .parallel import ExecutionPlan, ParallelExecutor, Task, should_parallelize
+from .reflection import ConfidenceScore, ReflectionEngine, reflect_before_execution
+from .self_correction import RootCause, SelfCorrectionEngine, learn_from_failure
 
 __all__ = [
     "intelligent_execute",
@@ -30,6 +31,10 @@ __all__ = [
     "ConfidenceScore",
     "ExecutionPlan",
     "RootCause",
+    "Task",
+    "should_parallelize",
+    "reflect_before_execution",
+    "learn_from_failure",
 ]
 
 

@@ -23,10 +23,10 @@ Process:
     4. Store for future reference (dual storage)
 """
 
-from typing import Dict, List, Optional, Any
-from pathlib import Path
 import json
 from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, Optional
 
 
 class ReflexionPattern:

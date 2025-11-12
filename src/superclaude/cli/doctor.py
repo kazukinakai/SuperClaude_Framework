@@ -5,8 +5,7 @@ Health check for SuperClaude installation.
 """
 
 from pathlib import Path
-from typing import Dict, List, Any
-import sys
+from typing import Any, Dict
 
 
 def run_doctor(verbose: bool = False) -> Dict[str, Any]:

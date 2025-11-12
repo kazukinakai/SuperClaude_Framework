@@ -4,9 +4,9 @@ Skill Installation Command
 Installs SuperClaude skills to ~/.claude/skills/ directory.
 """
 
+import shutil
 from pathlib import Path
 from typing import List, Optional, Tuple
-import shutil
 
 
 def install_skill_command(

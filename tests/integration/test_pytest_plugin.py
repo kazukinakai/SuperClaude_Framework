@@ -91,13 +91,11 @@ class TestPytestPluginIntegration:
 
     def test_pytest_markers_registered(self):
         """Test that custom markers are registered"""
-        # Get all registered markers
-        markers = {marker.name for marker in pytest.mark.__dict__.values() if hasattr(marker, "name")}
-
         # Note: This test might need adjustment based on pytest version
         # The important thing is that our custom markers exist
         # confidence_check, self_check, reflexion, complexity
         # These are registered in pytest_plugin.py
+        pass
 
 
 class TestPytestPluginHooks:

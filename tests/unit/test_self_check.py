@@ -5,6 +5,7 @@ Tests post-implementation validation functionality.
 """
 
 import pytest
+
 from superclaude.pm_agent.self_check import SelfCheckProtocol
 
 

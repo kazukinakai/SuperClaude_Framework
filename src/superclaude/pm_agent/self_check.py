@@ -13,7 +13,7 @@ The Four Questions:
 4. Is there evidence?
 """
 
-from typing import Dict, List, Tuple, Any, Optional
+from typing import Any, Dict, List, Tuple
 
 
 class SelfCheckProtocol:

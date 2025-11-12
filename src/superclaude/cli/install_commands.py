@@ -4,9 +4,9 @@ Command Installation
 Installs SuperClaude slash commands to ~/.claude/commands/sc/ directory.
 """
 
+import shutil
 from pathlib import Path
 from typing import List, Tuple
-import shutil
 
 
 def install_commands(

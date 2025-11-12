@@ -5,6 +5,7 @@ Tests error learning and prevention functionality.
 """
 
 import pytest
+
 from superclaude.pm_agent.reflexion import ReflexionPattern
 
 
@@ -165,7 +166,7 @@ def test_reflexion_with_real_exception():
 
     try:
         # Simulate an operation that fails
-        result = 10 / 0
+        _ = 10 / 0  # noqa: F841
     except ZeroDivisionError as e:
         # Record the error
         error_info = {

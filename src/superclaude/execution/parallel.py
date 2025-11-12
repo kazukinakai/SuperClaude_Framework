@@ -11,11 +11,11 @@ Key features:
 - Result aggregation and error handling
 """
 
-from dataclasses import dataclass
-from typing import List, Dict, Any, Callable, Optional, Set
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from enum import Enum
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from dataclasses import dataclass
+from enum import Enum
+from typing import Any, Callable, Dict, List, Optional, Set
 
 
 class TaskStatus(Enum):
@@ -105,9 +105,6 @@ class ParallelExecutor:
 
         print(f"⚡ Parallel Executor: Planning {len(tasks)} tasks")
         print("=" * 60)
-
-        # Build dependency graph
-        task_map = {task.id: task for task in tasks}
 
         # Find parallel groups using topological sort
         groups = []

@@ -5,8 +5,8 @@ This file is automatically loaded by pytest and provides
 shared fixtures available to all test modules.
 """
 
+
 import pytest
-from pathlib import Path
 
 
 @pytest.fixture

@@ -12,12 +12,12 @@ Key features:
 - Persistent learning memory
 """
 
-from dataclasses import dataclass, asdict
-from typing import List, Optional, Dict, Any
-from pathlib import Path
-import json
-from datetime import datetime
 import hashlib
+import json
+from dataclasses import asdict, dataclass
+from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, List, Optional
 
 
 @dataclass
@@ -288,7 +288,7 @@ class SelfCorrectionEngine:
         Updates Reflexion memory with new learning.
         """
 
-        print(f"📚 Self-Correction: Learning from failure")
+        print("📚 Self-Correction: Learning from failure")
 
         # Generate unique ID for this failure
         failure_id = hashlib.md5(
@@ -334,13 +334,13 @@ class SelfCorrectionEngine:
             if "prevention_rules" not in data:
                 data["prevention_rules"] = []
             data["prevention_rules"].append(root_cause.prevention_rule)
-            print(f"📝 Prevention rule added")
+            print("📝 Prevention rule added")
 
         # Save updated memory
         with open(self.reflexion_file, 'w') as f:
             json.dump(data, f, indent=2)
 
-        print(f"💾 Reflexion memory updated")
+        print("💾 Reflexion memory updated")
 
     def get_prevention_rules(self) -> List[str]:
         """Get all active prevention rules"""

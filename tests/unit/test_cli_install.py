@@ -4,8 +4,6 @@ Unit tests for CLI install command
 Tests the command installation functionality.
 """
 
-import pytest
-from pathlib import Path
 from superclaude.cli.install_commands import (
     install_commands,
     list_available_commands,
@@ -172,7 +170,6 @@ def test_cli_integration():
     This tests that the CLI main.py can successfully import the functions
     """
     from superclaude.cli.install_commands import (
-        install_commands,
         list_available_commands,
     )
 

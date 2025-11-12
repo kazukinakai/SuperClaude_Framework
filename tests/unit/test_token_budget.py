@@ -5,6 +5,7 @@ Tests token budget allocation and management functionality.
 """
 
 import pytest
+
 from superclaude.pm_agent.token_budget import TokenBudgetManager
 
 
