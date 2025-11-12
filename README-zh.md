@@ -317,7 +317,7 @@ pip install --break-system-packages SuperClaude
 </td>
 <td valign="top">
 
-- ✨ [**最佳实践**](docs/reference/quick-start-practices.md)  
+- ✨ [**最佳实践**](docs/reference/basic-examples.md)
   *专业技巧和模式*
 
 - 📓 [**示例手册**](docs/reference/examples-cookbook.md)  
