@@ -23,6 +23,7 @@ from typing import Any, Dict, List, Optional
 @dataclass
 class RootCause:
     """Identified root cause of failure"""
+
     category: str  # e.g., "validation", "dependency", "logic", "assumption"
     description: str
     evidence: List[str]
@@ -41,6 +42,7 @@ class RootCause:
 @dataclass
 class FailureEntry:
     """Single failure entry in Reflexion memory"""
+
     id: str
     timestamp: str
     task: str
@@ -95,10 +97,10 @@ class SelfCorrectionEngine:
             "created": datetime.now().isoformat(),
             "mistakes": [],
             "patterns": [],
-            "prevention_rules": []
+            "prevention_rules": [],
         }
 
-        with open(self.reflexion_file, 'w') as f:
+        with open(self.reflexion_file, "w") as f:
             json.dump(initial_data, f, indent=2)
 
     def detect_failure(self, execution_result: Dict[str, Any]) -> bool:
@@ -110,11 +112,7 @@ class SelfCorrectionEngine:
         status = execution_result.get("status", "unknown")
         return status in ["failed", "error", "exception"]
 
-    def analyze_root_cause(
-        self,
-        task: str,
-        failure: Dict[str, Any]
-    ) -> RootCause:
+    def analyze_root_cause(self, task: str, failure: Dict[str, Any]) -> RootCause:
         """
         Analyze root cause of failure
 
@@ -148,7 +146,7 @@ class SelfCorrectionEngine:
             description=error_msg,
             evidence=[error_msg, stack_trace] if stack_trace else [error_msg],
             prevention_rule=prevention_rule,
-            validation_tests=validation_tests
+            validation_tests=validation_tests,
         )
 
         print(root_cause)
@@ -162,11 +160,15 @@ class SelfCorrectionEngine:
         error_lower = error_msg.lower()
 
         # Validation failures
-        if any(word in error_lower for word in ["invalid", "missing", "required", "must"]):
+        if any(
+            word in error_lower for word in ["invalid", "missing", "required", "must"]
+        ):
             return "validation"
 
         # Dependency failures
-        if any(word in error_lower for word in ["not found", "missing", "import", "module"]):
+        if any(
+            word in error_lower for word in ["not found", "missing", "import", "module"]
+        ):
             return "dependency"
 
         # Logic errors
@@ -191,8 +193,7 @@ class SelfCorrectionEngine:
                 data = json.load(f)
 
             past_failures = [
-                FailureEntry.from_dict(entry)
-                for entry in data.get("mistakes", [])
+                FailureEntry.from_dict(entry) for entry in data.get("mistakes", [])
             ]
 
             # Simple similarity: keyword overlap
@@ -217,10 +218,7 @@ class SelfCorrectionEngine:
             return []
 
     def _generate_prevention_rule(
-        self,
-        category: str,
-        error_msg: str,
-        similar: List[FailureEntry]
+        self, category: str, error_msg: str, similar: List[FailureEntry]
     ) -> str:
         """Generate prevention rule based on failure analysis"""
 
@@ -230,7 +228,7 @@ class SelfCorrectionEngine:
             "logic": "ALWAYS verify assumptions with assertions",
             "assumption": "NEVER assume - always verify with checks",
             "type": "ALWAYS use type hints and runtime type checking",
-            "unknown": "ALWAYS add error handling for unknown cases"
+            "unknown": "ALWAYS add error handling for unknown cases",
         }
 
         base_rule = rules.get(category, "ALWAYS add defensive checks")
@@ -248,28 +246,28 @@ class SelfCorrectionEngine:
             "validation": [
                 "Check input is not None",
                 "Verify input type matches expected",
-                "Validate input range/constraints"
+                "Validate input range/constraints",
             ],
             "dependency": [
                 "Verify module exists before import",
                 "Check file exists before reading",
-                "Validate path is accessible"
+                "Validate path is accessible",
             ],
             "logic": [
                 "Add assertion for pre-conditions",
                 "Add assertion for post-conditions",
-                "Verify intermediate results"
+                "Verify intermediate results",
             ],
             "assumption": [
                 "Explicitly check assumed condition",
                 "Add logging for assumption verification",
-                "Document assumption with test"
+                "Document assumption with test",
             ],
             "type": [
                 "Add type hints",
                 "Add runtime type checking",
-                "Use dataclass with validation"
-            ]
+                "Use dataclass with validation",
+            ],
         }
 
         return tests.get(category, ["Add defensive check", "Add error handling"])
@@ -280,7 +278,7 @@ class SelfCorrectionEngine:
         failure: Dict[str, Any],
         root_cause: RootCause,
         fixed: bool = False,
-        fix_description: Optional[str] = None
+        fix_description: Optional[str] = None,
     ):
         """
         Learn from failure and store prevention rules
@@ -305,7 +303,7 @@ class SelfCorrectionEngine:
             root_cause=root_cause,
             fixed=fixed,
             fix_description=fix_description,
-            recurrence_count=0
+            recurrence_count=0,
         )
 
         # Load current reflexion memory
@@ -337,7 +335,7 @@ class SelfCorrectionEngine:
             print("📝 Prevention rule added")
 
         # Save updated memory
-        with open(self.reflexion_file, 'w') as f:
+        with open(self.reflexion_file, "w") as f:
             json.dump(data, f, indent=2)
 
         print("💾 Reflexion memory updated")
@@ -366,8 +364,7 @@ class SelfCorrectionEngine:
                 data = json.load(f)
 
             past_failures = [
-                FailureEntry.from_dict(entry)
-                for entry in data.get("mistakes", [])
+                FailureEntry.from_dict(entry) for entry in data.get("mistakes", [])
             ]
 
             # Find similar tasks
@@ -391,7 +388,9 @@ class SelfCorrectionEngine:
 _self_correction_engine: Optional[SelfCorrectionEngine] = None
 
 
-def get_self_correction_engine(repo_path: Optional[Path] = None) -> SelfCorrectionEngine:
+def get_self_correction_engine(
+    repo_path: Optional[Path] = None,
+) -> SelfCorrectionEngine:
     """Get or create self-correction engine singleton"""
     global _self_correction_engine
 
@@ -408,7 +407,7 @@ def learn_from_failure(
     task: str,
     failure: Dict[str, Any],
     fixed: bool = False,
-    fix_description: Optional[str] = None
+    fix_description: Optional[str] = None,
 ):
     """
     Learn from execution failure

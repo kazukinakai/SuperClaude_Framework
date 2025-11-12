@@ -152,7 +152,8 @@ class ReflexionPattern:
             message = error_info["error_message"]
             # Remove numbers (often varies between errors)
             import re
-            message = re.sub(r'\d+', 'N', message)
+
+            message = re.sub(r"\d+", "N", message)
             parts.append(message[:100])  # First 100 chars
 
         if "test_name" in error_info:
@@ -261,47 +262,47 @@ class ReflexionPattern:
         content = f"""# Mistake Record: {test_name}
 
 **Date**: {date}
-**Error Type**: {error_info.get('error_type', 'Unknown')}
+**Error Type**: {error_info.get("error_type", "Unknown")}
 
 ---
 
 ## ❌ What Happened
 
-{error_info.get('error_message', 'No error message')}
+{error_info.get("error_message", "No error message")}
 
 ```
-{error_info.get('traceback', 'No traceback')}
+{error_info.get("traceback", "No traceback")}
 ```
 
 ---
 
 ## 🔍 Root Cause
 
-{error_info.get('root_cause', 'Not analyzed')}
+{error_info.get("root_cause", "Not analyzed")}
 
 ---
 
 ## 🤔 Why Missed
 
-{error_info.get('why_missed', 'Not analyzed')}
+{error_info.get("why_missed", "Not analyzed")}
 
 ---
 
 ## ✅ Fix Applied
 
-{error_info.get('solution', 'Not documented')}
+{error_info.get("solution", "Not documented")}
 
 ---
 
 ## 🛡️ Prevention Checklist
 
-{error_info.get('prevention', 'Not documented')}
+{error_info.get("prevention", "Not documented")}
 
 ---
 
 ## 💡 Lesson Learned
 
-{error_info.get('lesson', 'Not documented')}
+{error_info.get("lesson", "Not documented")}
 """
 
         filepath.write_text(content)

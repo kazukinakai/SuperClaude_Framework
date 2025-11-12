@@ -60,7 +60,9 @@ class TestConfidenceChecker:
 
         confidence = checker.assess(context)
 
-        assert 0.7 <= confidence < 0.9, f"Expected medium confidence 0.7-0.9, got {confidence}"
+        assert 0.7 <= confidence < 0.9, (
+            f"Expected medium confidence 0.7-0.9, got {confidence}"
+        )
         assert confidence == 0.7, "Should be exactly 70%"
 
     def test_confidence_checks_recorded(self, sample_context):

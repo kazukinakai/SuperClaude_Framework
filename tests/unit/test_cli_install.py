@@ -138,7 +138,9 @@ class TestInstallCommands:
         expected = ["agent", "index-repo", "recommend", "research"]
 
         for expected_cmd in expected:
-            assert expected_cmd in commands, f"Expected command '{expected_cmd}' not found"
+            assert expected_cmd in commands, (
+                f"Expected command '{expected_cmd}' not found"
+            )
 
 
 class TestInstallCommandsEdgeCases:

@@ -19,6 +19,7 @@ from typing import Any, Dict, List, Optional
 @dataclass
 class ReflectionResult:
     """Single reflection analysis result"""
+
     stage: str
     score: float  # 0.0 - 1.0
     evidence: List[str]
@@ -48,10 +49,12 @@ class ConfidenceScore:
 
     def __repr__(self) -> str:
         status = "🟢 PROCEED" if self.should_proceed else "🔴 BLOCKED"
-        return f"{status} | Confidence: {self.confidence:.0%}\n" + \
-               f"  Clarity: {self.requirement_clarity}\n" + \
-               f"  Mistakes: {self.mistake_check}\n" + \
-               f"  Context: {self.context_ready}"
+        return (
+            f"{status} | Confidence: {self.confidence:.0%}\n"
+            + f"  Clarity: {self.requirement_clarity}\n"
+            + f"  Mistakes: {self.mistake_check}\n"
+            + f"  Context: {self.context_ready}"
+        )
 
 
 class ReflectionEngine:
@@ -79,12 +82,14 @@ class ReflectionEngine:
 
         # Weights for confidence calculation
         self.WEIGHTS = {
-            "clarity": 0.5,      # Most important
-            "mistakes": 0.3,     # Learn from past
-            "context": 0.2,      # Least critical (can load more)
+            "clarity": 0.5,  # Most important
+            "mistakes": 0.3,  # Learn from past
+            "context": 0.2,  # Least critical (can load more)
         }
 
-    def reflect(self, task: str, context: Optional[Dict[str, Any]] = None) -> ConfidenceScore:
+    def reflect(
+        self, task: str, context: Optional[Dict[str, Any]] = None
+    ) -> ConfidenceScore:
         """
         3-Stage Reflection Process
 
@@ -108,9 +113,9 @@ class ReflectionEngine:
 
         # Calculate overall confidence
         confidence = (
-            clarity.score * self.WEIGHTS["clarity"] +
-            mistakes.score * self.WEIGHTS["mistakes"] +
-            context_ready.score * self.WEIGHTS["context"]
+            clarity.score * self.WEIGHTS["clarity"]
+            + mistakes.score * self.WEIGHTS["mistakes"]
+            + context_ready.score * self.WEIGHTS["context"]
         )
 
         # Decision logic
@@ -139,7 +144,7 @@ class ReflectionEngine:
             confidence=confidence,
             should_proceed=should_proceed,
             blockers=blockers,
-            recommendations=recommendations
+            recommendations=recommendations,
         )
 
         print("=" * 60)
@@ -148,7 +153,9 @@ class ReflectionEngine:
 
         return result
 
-    def _reflect_clarity(self, task: str, context: Optional[Dict] = None) -> ReflectionResult:
+    def _reflect_clarity(
+        self, task: str, context: Optional[Dict] = None
+    ) -> ReflectionResult:
         """
         Reflection 1: Requirement Clarity
 
@@ -161,7 +168,15 @@ class ReflectionEngine:
         score = 0.5  # Start neutral
 
         # Check for specificity indicators
-        specific_verbs = ["create", "fix", "add", "update", "delete", "refactor", "implement"]
+        specific_verbs = [
+            "create",
+            "fix",
+            "add",
+            "update",
+            "delete",
+            "refactor",
+            "implement",
+        ]
         vague_verbs = ["improve", "optimize", "enhance", "better", "something"]
 
         task_lower = task.lower()
@@ -172,7 +187,10 @@ class ReflectionEngine:
             evidence.append("Contains specific action verb")
 
         # Technical terms present
-        if any(term in task_lower for term in ["function", "class", "file", "api", "endpoint"]):
+        if any(
+            term in task_lower
+            for term in ["function", "class", "file", "api", "endpoint"]
+        ):
             score += 0.15
             evidence.append("Includes technical specifics")
 
@@ -198,10 +216,12 @@ class ReflectionEngine:
             stage="Requirement Clarity",
             score=score,
             evidence=evidence,
-            concerns=concerns
+            concerns=concerns,
         )
 
-    def _reflect_mistakes(self, task: str, context: Optional[Dict] = None) -> ReflectionResult:
+    def _reflect_mistakes(
+        self, task: str, context: Optional[Dict] = None
+    ) -> ReflectionResult:
         """
         Reflection 2: Past Mistake Check
 
@@ -218,10 +238,7 @@ class ReflectionEngine:
         if not reflexion_file.exists():
             evidence.append("No past mistakes recorded")
             return ReflectionResult(
-                stage="Past Mistakes",
-                score=score,
-                evidence=evidence,
-                concerns=concerns
+                stage="Past Mistakes", score=score, evidence=evidence, concerns=concerns
             )
 
         try:
@@ -248,7 +265,9 @@ class ReflectionEngine:
                 for mistake in similar_mistakes[:3]:  # Show max 3
                     concerns.append(f"  ⚠️ {mistake.get('mistake', 'Unknown')}")
             else:
-                evidence.append(f"Checked {len(past_mistakes)} past mistakes - none similar")
+                evidence.append(
+                    f"Checked {len(past_mistakes)} past mistakes - none similar"
+                )
 
         except Exception as e:
             concerns.append(f"Could not load reflexion memory: {e}")
@@ -258,13 +277,12 @@ class ReflectionEngine:
         score = max(0.0, min(1.0, score))
 
         return ReflectionResult(
-            stage="Past Mistakes",
-            score=score,
-            evidence=evidence,
-            concerns=concerns
+            stage="Past Mistakes", score=score, evidence=evidence, concerns=concerns
         )
 
-    def _reflect_context(self, task: str, context: Optional[Dict] = None) -> ReflectionResult:
+    def _reflect_context(
+        self, task: str, context: Optional[Dict] = None
+    ) -> ReflectionResult:
         """
         Reflection 3: Context Readiness
 
@@ -283,7 +301,7 @@ class ReflectionEngine:
                 stage="Context Readiness",
                 score=score,
                 evidence=evidence,
-                concerns=concerns
+                concerns=concerns,
             )
 
         # Check for essential context elements
@@ -319,10 +337,7 @@ class ReflectionEngine:
         score = max(0.0, min(1.0, score))
 
         return ReflectionResult(
-            stage="Context Readiness",
-            score=score,
-            evidence=evidence,
-            concerns=concerns
+            stage="Context Readiness", score=score, evidence=evidence, concerns=concerns
         )
 
     def record_reflection(self, task: str, confidence: ConfidenceScore, decision: str):
@@ -336,7 +351,7 @@ class ReflectionEngine:
             "confidence": confidence.confidence,
             "decision": decision,
             "blockers": confidence.blockers,
-            "recommendations": confidence.recommendations
+            "recommendations": confidence.recommendations,
         }
 
         # Append to log
@@ -349,7 +364,7 @@ class ReflectionEngine:
 
             log_data["reflections"].append(entry)
 
-            with open(reflection_log, 'w') as f:
+            with open(reflection_log, "w") as f:
                 json.dump(log_data, f, indent=2)
 
         except Exception as e:
@@ -373,7 +388,9 @@ def get_reflection_engine(repo_path: Optional[Path] = None) -> ReflectionEngine:
 
 
 # Convenience function
-def reflect_before_execution(task: str, context: Optional[Dict] = None) -> ConfidenceScore:
+def reflect_before_execution(
+    task: str, context: Optional[Dict] = None
+) -> ConfidenceScore:
     """
     Perform 3-stage reflection before task execution
 

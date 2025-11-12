@@ -9,7 +9,6 @@ Entry point registered in pyproject.toml:
     superclaude = "superclaude.pytest_plugin"
 """
 
-
 import pytest
 
 from .pm_agent.confidence import ConfidenceChecker
@@ -29,20 +28,17 @@ def pytest_configure(config):
         - complexity(level): Set test complexity (simple, medium, complex)
     """
     config.addinivalue_line(
-        "markers",
-        "confidence_check: Pre-execution confidence assessment (min 70%)"
+        "markers", "confidence_check: Pre-execution confidence assessment (min 70%)"
     )
     config.addinivalue_line(
         "markers",
-        "self_check: Post-implementation validation with evidence requirement"
+        "self_check: Post-implementation validation with evidence requirement",
     )
     config.addinivalue_line(
-        "markers",
-        "reflexion: Error learning and prevention pattern"
+        "markers", "reflexion: Error learning and prevention pattern"
     )
     config.addinivalue_line(
-        "markers",
-        "complexity(level): Set test complexity (simple, medium, complex)"
+        "markers", "complexity(level): Set test complexity (simple, medium, complex)"
     )
 
 
@@ -158,9 +154,7 @@ def pytest_runtest_setup(item):
         confidence = checker.assess(context)
 
         if confidence < 0.7:
-            pytest.skip(
-                f"Confidence too low: {confidence:.0%} (minimum: 70%)"
-            )
+            pytest.skip(f"Confidence too low: {confidence:.0%} (minimum: 70%)")
 
 
 def pytest_runtest_makereport(item, call):
@@ -193,6 +187,7 @@ def pytest_runtest_makereport(item, call):
 def pytest_report_header(config):
     """Add SuperClaude version to pytest header"""
     from . import __version__
+
     return f"SuperClaude: {__version__}"
 
 

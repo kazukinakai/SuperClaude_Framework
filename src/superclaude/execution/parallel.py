@@ -20,6 +20,7 @@ from typing import Any, Callable, Dict, List, Optional, Set
 
 class TaskStatus(Enum):
     """Task execution status"""
+
     PENDING = "pending"
     RUNNING = "running"
     COMPLETED = "completed"
@@ -29,6 +30,7 @@ class TaskStatus(Enum):
 @dataclass
 class Task:
     """Single executable task"""
+
     id: str
     description: str
     execute: Callable
@@ -45,6 +47,7 @@ class Task:
 @dataclass
 class ParallelGroup:
     """Group of tasks that can execute in parallel"""
+
     group_id: int
     tasks: List[Task]
     dependencies: Set[str]  # External task IDs this group depends on
@@ -56,6 +59,7 @@ class ParallelGroup:
 @dataclass
 class ExecutionPlan:
     """Complete execution plan with parallelization strategy"""
+
     groups: List[ParallelGroup]
     total_tasks: int
     sequential_time_estimate: float
@@ -114,7 +118,8 @@ class ParallelExecutor:
         while len(completed) < len(tasks):
             # Find tasks that can execute now (dependencies met)
             ready = [
-                task for task in tasks
+                task
+                for task in tasks
                 if task.id not in completed and task.can_execute(completed)
             ]
 
@@ -127,7 +132,7 @@ class ParallelExecutor:
             group = ParallelGroup(
                 group_id=group_id,
                 tasks=ready,
-                dependencies=set().union(*[set(t.depends_on) for t in ready])
+                dependencies=set().union(*[set(t.depends_on) for t in ready]),
             )
             groups.append(group)
 
@@ -143,8 +148,7 @@ class ParallelExecutor:
 
         # Parallel time = sum of slowest task in each group
         parallel_time = sum(
-            max(1, len(group.tasks) // self.max_workers) * task_time
-            for group in groups
+            max(1, len(group.tasks) // self.max_workers) * task_time for group in groups
         )
 
         speedup = sequential_time / parallel_time if parallel_time > 0 else 1.0
@@ -154,7 +158,7 @@ class ParallelExecutor:
             total_tasks=len(tasks),
             sequential_time_estimate=sequential_time,
             parallel_time_estimate=parallel_time,
-            speedup=speedup
+            speedup=speedup,
         )
 
         print(plan)
@@ -205,8 +209,7 @@ class ParallelExecutor:
         with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
             # Submit all tasks in group
             future_to_task = {
-                executor.submit(task.execute): task
-                for task in group.tasks
+                executor.submit(task.execute): task for task in group.tasks
             }
 
             # Collect results as they complete
@@ -233,6 +236,7 @@ class ParallelExecutor:
 
 # Convenience functions for common patterns
 
+
 def parallel_file_operations(files: List[str], operation: Callable) -> List[Any]:
     """
     Execute operation on multiple files in parallel
@@ -251,7 +255,7 @@ def parallel_file_operations(files: List[str], operation: Callable) -> List[Any]
             id=f"op_{i}",
             description=f"Process {file}",
             execute=lambda f=file: operation(f),
-            depends_on=[]
+            depends_on=[],
         )
         for i, file in enumerate(files)
     ]
@@ -273,6 +277,7 @@ def should_parallelize(items: List[Any], threshold: int = 3) -> bool:
 
 # Example usage patterns
 
+
 def example_parallel_read():
     """Example: Parallel file reading"""
 
@@ -285,7 +290,7 @@ def example_parallel_read():
             id=f"read_{i}",
             description=f"Read {file}",
             execute=lambda f=file: f"Content of {f}",  # Placeholder
-            depends_on=[]
+            depends_on=[],
         )
         for i, file in enumerate(files)
     ]
@@ -306,10 +311,10 @@ def example_dependent_tasks():
         Task("read1", "Read config.py", lambda: "config", []),
         Task("read2", "Read utils.py", lambda: "utils", []),
         Task("read3", "Read main.py", lambda: "main", []),
-
         # Wave 2: Analysis (depends on reads)
-        Task("analyze", "Analyze code", lambda: "analysis", ["read1", "read2", "read3"]),
-
+        Task(
+            "analyze", "Analyze code", lambda: "analysis", ["read1", "read2", "read3"]
+        ),
         # Wave 3: Generate report (depends on analysis)
         Task("report", "Generate report", lambda: "report", ["analyze"]),
     ]

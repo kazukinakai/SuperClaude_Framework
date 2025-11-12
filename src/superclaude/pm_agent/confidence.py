@@ -242,8 +242,12 @@ class ConfidenceChecker:
         # Check for markers indicating test type
         markers = context.get("markers", [])
         known_markers = {
-            "unit", "integration", "hallucination",
-            "performance", "confidence_check", "self_check"
+            "unit",
+            "integration",
+            "hallucination",
+            "performance",
+            "confidence_check",
+            "self_check",
         }
 
         has_markers = bool(set(markers) & known_markers)

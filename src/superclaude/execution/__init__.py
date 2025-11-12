@@ -43,7 +43,7 @@ def intelligent_execute(
     operations: List[Callable],
     context: Optional[Dict[str, Any]] = None,
     repo_path: Optional[Path] = None,
-    auto_correct: bool = True
+    auto_correct: bool = True,
 ) -> Dict[str, Any]:
     """
     Intelligent Task Execution with Reflection, Parallelization, and Self-Correction
@@ -96,7 +96,7 @@ def intelligent_execute(
             "status": "blocked",
             "confidence": confidence.confidence,
             "blockers": confidence.blockers,
-            "recommendations": confidence.recommendations
+            "recommendations": confidence.recommendations,
         }
 
     print(f"\n✅ HIGH CONFIDENCE ({confidence.confidence:.0%}) - PROCEEDING")
@@ -111,9 +111,9 @@ def intelligent_execute(
     tasks = [
         Task(
             id=f"task_{i}",
-            description=f"Operation {i+1}",
+            description=f"Operation {i + 1}",
             execute=op,
-            depends_on=[]  # Assume independent for now (can enhance later)
+            depends_on=[],  # Assume independent for now (can enhance later)
         )
         for i, op in enumerate(operations)
     ]
@@ -145,7 +145,7 @@ def intelligent_execute(
                 failure_info = {
                     "type": "execution_error",
                     "error": "Operation returned None",
-                    "task_id": task_id
+                    "task_id": task_id,
                 }
 
                 root_cause = correction_engine.analyze_root_cause(task, failure_info)
@@ -162,7 +162,7 @@ def intelligent_execute(
             "confidence": confidence.confidence,
             "results": results,
             "failures": len(failures),
-            "speedup": plan.speedup
+            "speedup": plan.speedup,
         }
 
     except Exception as e:
@@ -174,11 +174,7 @@ def intelligent_execute(
 
             correction_engine = SelfCorrectionEngine(repo_path)
 
-            failure_info = {
-                "type": "exception",
-                "error": str(e),
-                "exception": e
-            }
+            failure_info = {"type": "exception", "error": str(e), "exception": e}
 
             root_cause = correction_engine.analyze_root_cause(task, failure_info)
             correction_engine.learn_and_prevent(task, failure_info, root_cause)
@@ -188,11 +184,12 @@ def intelligent_execute(
         return {
             "status": "failed",
             "error": str(e),
-            "confidence": confidence.confidence
+            "confidence": confidence.confidence,
         }
 
 
 # Convenience functions
+
 
 def quick_execute(operations: List[Callable]) -> List[Any]:
     """

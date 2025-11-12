@@ -10,9 +10,7 @@ from typing import List, Optional, Tuple
 
 
 def install_skill_command(
-    skill_name: str,
-    target_path: Path,
-    force: bool = False
+    skill_name: str, target_path: Path, force: bool = False
 ) -> Tuple[bool, str]:
     """
     Install a skill to target directory
@@ -40,7 +38,10 @@ def install_skill_command(
 
     # Check if skill already installed
     if skill_target.exists() and not force:
-        return False, f"Skill '{skill_name}' already installed (use --force to reinstall)"
+        return (
+            False,
+            f"Skill '{skill_name}' already installed (use --force to reinstall)",
+        )
 
     # Remove existing if force
     if skill_target.exists() and force:

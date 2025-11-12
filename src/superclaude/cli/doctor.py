@@ -55,8 +55,7 @@ def _check_pytest_plugin() -> Dict[str, Any]:
 
             # Check if superclaude plugin is loaded
             superclaude_loaded = any(
-                "superclaude" in str(plugin[0]).lower()
-                for plugin in plugins
+                "superclaude" in str(plugin[0]).lower() for plugin in plugins
             )
 
             if superclaude_loaded:
@@ -132,6 +131,7 @@ def _check_configuration() -> Dict[str, Any]:
     # Check if package is importable
     try:
         import superclaude
+
         version = superclaude.__version__
 
         return {

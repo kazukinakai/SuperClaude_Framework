@@ -9,10 +9,7 @@ from pathlib import Path
 from typing import List, Tuple
 
 
-def install_commands(
-    target_path: Path = None,
-    force: bool = False
-) -> Tuple[bool, str]:
+def install_commands(target_path: Path = None, force: bool = False) -> Tuple[bool, str]:
     """
     Install all SuperClaude commands to Claude Code
 
@@ -71,7 +68,9 @@ def install_commands(
             messages.append(f"   - /{cmd}")
 
     if skipped_commands:
-        messages.append(f"\n⚠️  Skipped {len(skipped_commands)} existing commands (use --force to reinstall):")
+        messages.append(
+            f"\n⚠️  Skipped {len(skipped_commands)} existing commands (use --force to reinstall):"
+        )
         for cmd in skipped_commands:
             messages.append(f"   - /{cmd}")
 
