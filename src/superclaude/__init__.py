@@ -5,8 +5,8 @@ AI-enhanced development framework for Claude Code.
 Provides pytest plugin for enhanced testing and optional skills system.
 """
 
-__version__ = "0.4.0"
-__author__ = "Kazuki Nakai"
+__version__ = "4.1.7"
+__author__ = "NomenAK, Mithun Gowda B"
 
 # Expose main components
 from .pm_agent.confidence import ConfidenceChecker
