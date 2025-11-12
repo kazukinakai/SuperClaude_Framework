@@ -18,13 +18,13 @@ uv run python script.py          # Execute scripts
 
 ## 📂 Project Structure
 
-> **⚠️ IMPORTANT**: The `.claude-plugin/` directory and TypeScript plugin system described in older docs **DO NOT EXIST** in v4.1.6.
+> **⚠️ IMPORTANT**: The `.claude-plugin/` directory and TypeScript plugin system described in older docs **DO NOT EXIST** in v4.1.7.
 > This is planned for v5.0 (see [issue #419](https://github.com/SuperClaude-Org/SuperClaude_Framework/issues/419)).
 
-**Current v4.1.6 Architecture**: Python package with slash commands
+**Current v4.1.7 Architecture**: Python package with slash commands
 
 ```
-# Claude Code Configuration (v4.1.6)
+# Claude Code Configuration (v4.1.7)
 .claude/
 ├── settings.json        # User settings
 └── commands/            # Slash commands (installed via `superclaude install`)
@@ -122,10 +122,10 @@ Registered via `pyproject.toml` entry point, automatically available after insta
 
 ### TypeScript Plugins (Planned for v5.0)
 
-> **⚠️ NOT IMPLEMENTED**: The TypeScript plugin system described below does not exist in v4.1.6.
+> **⚠️ NOT IMPLEMENTED**: The TypeScript plugin system described below does not exist in v4.1.7.
 > This is planned for v5.0. See [issue #419](https://github.com/SuperClaude-Org/SuperClaude_Framework/issues/419) and `docs/plugin-reorg.md`.
 
-**Current v4.1.6 Commands** (slash commands, not plugins):
+**Current v4.1.7 Commands** (slash commands, not plugins):
 - Install via: `pipx install superclaude && superclaude install`
 - Commands installed to: `~/.claude/commands/`
 - Available commands: `/pm`, `/research`, `/index-repo` (and others)
@@ -248,7 +248,7 @@ Integrates with multiple MCP servers via **airis-mcp-gateway**.
 
 ## 🚀 Development & Installation
 
-### Current Installation Method (v4.1.6)
+### Current Installation Method (v4.1.7)
 
 **Standard Installation**:
 ```bash
@@ -276,7 +276,7 @@ make verify
 
 ### Plugin System (Planned for v5.0 - NOT AVAILABLE)
 
-> **⚠️ IMPORTANT**: The plugin system described in older documentation **does not exist** in v4.1.6.
+> **⚠️ IMPORTANT**: The plugin system described in older documentation **does not exist** in v4.1.7.
 > These features are planned for v5.0 (see [issue #419](https://github.com/SuperClaude-Org/SuperClaude_Framework/issues/419)).
 
 **What Does NOT Work** (yet):

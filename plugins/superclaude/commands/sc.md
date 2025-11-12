@@ -114,7 +114,7 @@ Check the documentation:
 
 ## Version
 
-SuperClaude v4.1.6
+SuperClaude v4.1.7
 - Python package: 0.4.0
 - Pytest plugin included
 - PM Agent patterns enabled

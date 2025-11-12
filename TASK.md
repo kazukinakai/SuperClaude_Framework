@@ -15,7 +15,7 @@
 
 1. **[DONE]** Version inconsistency across files
    - ✅ Fixed VERSION file, README files (commit bec0b0c)
-   - ✅ Updated package.json to 4.1.6
+   - ✅ Updated package.json to 4.1.7
    - ⚠️ Note: pyproject.toml intentionally uses 0.4.0 (Python package versioning)
 
 2. **[DONE]** Plugin system documentation misleading

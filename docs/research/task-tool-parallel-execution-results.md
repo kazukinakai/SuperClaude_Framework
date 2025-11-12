@@ -90,7 +90,7 @@ Speedup: 3-5x ✅
   "critical_findings": [
     "Duplicate CLIs: setup/cli.py vs superclaude/cli.py",
     "51 __pycache__ directories (cache pollution)",
-    "Version mismatch: pyproject.toml=4.1.6 ≠ package.json=4.1.5"
+    "Version mismatch: pyproject.toml=4.1.7 ≠ package.json=4.1.5"
   ]
 }
 ```
@@ -126,7 +126,7 @@ Speedup: 3-5x ✅
 {
   "config_files": 9,
   "python": {
-    "pyproject.toml": {"version": "4.1.6", "python": ">=3.10"}
+    "pyproject.toml": {"version": "4.1.7", "python": ">=3.10"}
   },
   "javascript": {
     "package.json": {"version": "4.1.5"}
