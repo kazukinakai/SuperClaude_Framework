@@ -31,19 +31,19 @@ jobs:
 
       - name: Run unit tests only
         run: |
-          uv run pytest tests/unit/ -v --tb=short -x
+          pytest tests/unit/ -v --tb=short -x
 
       - name: Run linter
         run: |
-          uv run ruff check src/ tests/
+          ruff check src/ tests/
 
       - name: Check formatting
         run: |
-          uv run ruff format --check src/ tests/
+          ruff format --check src/ tests/
 
       - name: Verify pytest plugin
         run: |
-          uv run pytest --trace-config 2>&1 | grep -q "superclaude"
+          pytest --trace-config 2>&1 | grep -q "superclaude"
 
       - name: Summary
         if: success()

@@ -36,19 +36,21 @@ jobs:
       - name: Install dependencies
         run: |
           uv pip install --system -e ".[dev]"
+          uv pip list --system
 
       - name: Verify package installation
         run: |
-          uv run python -c "import superclaude; print(f'SuperClaude {superclaude.__version__} installed')"
+          python -c "import superclaude; print(f'SuperClaude {superclaude.__version__} installed')"
+          python -c "import pytest_cov; print('pytest-cov is installed')"
 
       - name: Run tests
         run: |
-          uv run pytest -v --tb=short --color=yes
+          pytest -v --tb=short --color=yes
 
       - name: Run tests with coverage
         if: matrix.python-version == '3.10'
         run: |
-          uv run pytest --cov=superclaude --cov-report=xml --cov-report=term
+          pytest --cov=superclaude --cov-report=xml --cov-report=term
 
       - name: Upload coverage to Codecov
         if: matrix.python-version == '3.10'
@@ -83,11 +85,11 @@ jobs:
 
       - name: Run ruff linter
         run: |
-          uv run ruff check src/ tests/
+          ruff check src/ tests/
 
       - name: Check ruff formatting
         run: |
-          uv run ruff format --check src/ tests/
+          ruff format --check src/ tests/
 
   plugin-check:
     name: Pytest Plugin Check
@@ -113,11 +115,11 @@ jobs:
 
       - name: Verify pytest plugin loaded
         run: |
-          uv run pytest --trace-config 2>&1 | grep -q "superclaude" && echo "✅ Plugin loaded successfully" || (echo "❌ Plugin not loaded" && exit 1)
+          pytest --trace-config 2>&1 | grep -q "superclaude" && echo "✅ Plugin loaded successfully" || (echo "❌ Plugin not loaded" && exit 1)
 
       - name: Check available fixtures
         run: |
-          uv run pytest --fixtures | grep -E "(confidence_checker|self_check_protocol|reflexion_pattern|token_budget|pm_context)"
+          pytest --fixtures | grep -E "(confidence_checker|self_check_protocol|reflexion_pattern|token_budget|pm_context)"
 
   doctor-check:
     name: SuperClaude Doctor Check
@@ -143,7 +145,7 @@ jobs:
 
       - name: Run doctor command
         run: |
-          uv run superclaude doctor --verbose
+          superclaude doctor --verbose
 
   test-summary:
     name: Test Summary
