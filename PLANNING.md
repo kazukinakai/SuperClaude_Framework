@@ -23,7 +23,7 @@ SuperClaude Framework transforms Claude Code into a structured development platf
 
 ## 🏗️ **Architecture Overview**
 
-### **Current State (v4.1.7)**
+### **Current State (v4.1.8)**
 
 SuperClaude is a **Python package** with:
 - Pytest plugin (auto-loaded via entry points)
@@ -33,7 +33,7 @@ SuperClaude is a **Python package** with:
 - Optional slash commands (installed to ~/.claude/commands/)
 
 ```
-SuperClaude Framework v4.1.7
+SuperClaude Framework v4.1.8
 │
 ├── Core Package (src/superclaude/)
 │   ├── pytest_plugin.py          # Auto-loaded by pytest
@@ -237,7 +237,7 @@ Use SelfCheckProtocol to prevent hallucinations:
 ### **Version Management**
 
 1. **Version sources of truth**:
-   - Framework version: `VERSION` file (e.g., 4.1.7)
+   - Framework version: `VERSION` file (e.g., 4.1.8)
    - Python package version: `pyproject.toml` (e.g., 0.4.0)
    - NPM package version: `package.json` (should match VERSION)
 
@@ -338,7 +338,7 @@ Before releasing a new version:
 
 ## 🚀 **Roadmap**
 
-### **v4.1.7 (Current)**
+### **v4.1.8 (Current)**
 - ✅ Python package with pytest plugin
 - ✅ PM Agent patterns (confidence, self-check, reflexion)
 - ✅ Parallel execution framework

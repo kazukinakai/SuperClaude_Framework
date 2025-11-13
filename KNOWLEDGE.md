@@ -153,12 +153,12 @@ cat test_output.txt
 
 ### **Pitfall 4: Version Inconsistency**
 
-**Problem**: VERSION file says 4.1.7, but package.json says 4.1.5, pyproject.toml says 0.4.0.
+**Problem**: VERSION file says 4.1.8, but package.json says 4.1.5, pyproject.toml says 0.4.0.
 
 **Solution**: Understand versioning strategy:
-- **Framework version** (VERSION file): User-facing version (4.1.7)
+- **Framework version** (VERSION file): User-facing version (4.1.8)
 - **Python package** (pyproject.toml): Library semantic version (0.4.0)
-- **NPM package** (package.json): Should match framework version (4.1.7)
+- **NPM package** (package.json): Should match framework version (4.1.8)
 
 **When updating versions**:
 1. Update VERSION file first
@@ -523,7 +523,7 @@ Based on real usage data:
 
 ### **Lesson 1: Documentation Drift is Real**
 
-**What happened**: README described v2.0 plugin system that didn't exist in v4.1.7
+**What happened**: README described v2.0 plugin system that didn't exist in v4.1.8
 
 **Impact**: Users spent hours trying to install non-existent features
 
