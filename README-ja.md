@@ -51,10 +51,12 @@
 
 ## 📊 **フレームワーク統計**
 
-| **コマンド数** | **エージェント** | **モード** | **MCPサーバー** |
+| **プラグイン** | **エージェント** | **モード** | **MCPサーバー** |
 |:------------:|:----------:|:---------:|:---------------:|
-| **21** | **14** | **5** | **6** |
-| スラッシュコマンド | 専門AI | 動作モード | 統合サービス |
+| **3** | **16** | **7** | **8** |
+| プラグインコマンド | 専門AI | 動作モード | 統合サービス |
+
+3つのコアプラグイン：**PM Agent**(オーケストレーション)、**Research**(ウェブ検索)、**Index**(コンテキスト最適化)。
 
 </div>
 
@@ -66,56 +68,100 @@
 
 SuperClaudeは**メタプログラミング設定フレームワーク**で、動作指示の注入とコンポーネント統制を通じて、Claude Codeを構造化開発プラットフォームに変換します。強力なツールとインテリジェントエージェントを備えたシステム化されたワークフロー自動化を提供します。
 
+
+## 免責事項
+
+このプロジェクトはAnthropicと関連または承認されていません。
+Claude Codeは[Anthropic](https://www.anthropic.com/)によって構築および維持されている製品です。
+
+## 📖 **開発者および貢献者向け**
+
+**SuperClaudeフレームワークを使用するための重要なドキュメント：**
+
+| ドキュメント | 目的 | いつ読むか |
+|----------|---------|--------------|
+| **[PLANNING.md](PLANNING.md)** | アーキテクチャ、設計原則、絶対的なルール | セッション開始時、実装前 |
+| **[TASK.md](TASK.md)** | 現在のタスク、優先順位、バックログ | 毎日、作業開始前 |
+| **[KNOWLEDGE.md](KNOWLEDGE.md)** | 蓄積された知見、ベストプラクティス、トラブルシューティング | 問題に遭遇したとき、パターンを学習するとき |
+| **[CONTRIBUTING.md](CONTRIBUTING.md)** | 貢献ガイドライン、ワークフロー | PRを提出する前 |
+
+> **💡 プロのヒント**：Claude Codeはセッション開始時にこれらのファイルを読み取り、プロジェクト標準に沿った一貫性のある高品質な開発を保証します。
+
 ## ⚡ **クイックインストール**
 
-### **インストール方法を選択**
+> **重要**：古いドキュメントで説明されているTypeScriptプラグインシステムは
+> まだ利用できません（v5.0で予定）。v4.xの現在のインストール
+> 手順については、以下の手順に従ってください。
 
-| 方法 | コマンド | 最適な用途 |
-|:------:|---------|----------|
-| **🐍 pipx** | `pipx install SuperClaude && pipx upgrade SuperClaude && SuperClaude install` | **✅ 推奨** - Linux/macOS |
-| **📦 pip** | `pip install SuperClaude && pip upgrade SuperClaude && SuperClaude install` | 従来のPython環境 |
-| **🌐 npm** | `npm install -g @bifrost_inc/superclaude && superclaude install` | クロスプラットフォーム、Node.jsユーザー |
+### **現在の安定バージョン (v4.1.8)**
+
+SuperClaudeは現在スラッシュコマンドを使用しています。
+
+**オプション1：pipx（推奨）**
+```bash
+# PyPIからインストール
+pipx install superclaude
+
+# コマンドをインストール（/research、/index-repo、/agent、/recommendをインストール）
+superclaude install
+
+# インストールを確認
+superclaude install --list
+superclaude doctor
+```
+
+インストール後、Claude Codeを再起動してコマンドを使用します：
+- `/sc:research` - 並列検索による深いウェブ研究
+- `/sc:index-repo` - コンテキスト最適化のためのリポジトリインデックス作成
+- `/sc:agent` - 専門AIエージェント
+- `/sc:recommend` - コマンド推奨
+- `/sc` - 利用可能なすべてのSuperClaudeコマンドを表示
+
+**オプション2：Gitから直接インストール**
+```bash
+# リポジトリをクローン
+git clone https://github.com/SuperClaude-Org/SuperClaude_Framework.git
+cd SuperClaude_Framework
+
+# インストールスクリプトを実行
+./install.sh
+```
+
+### **v5.0で提供予定（開発中）**
+
+新しいTypeScriptプラグインシステムを積極的に開発中です（詳細は[#419](https://github.com/SuperClaude-Org/SuperClaude_Framework/issues/419)を参照）。リリース後、インストールは次のように簡略化されます：
+
+```bash
+# この機能はまだ利用できません
+/plugin marketplace add SuperClaude-Org/superclaude-plugin-marketplace
+/plugin install superclaude
+```
+
+**ステータス**：開発中。ETAは未定です。
+
+### **パフォーマンス向上（オプションのMCP）**
+
+**2〜3倍**高速な実行と**30〜50%**少ないトークンのために、オプションでMCPサーバーをインストールできます：
+
+```bash
+# パフォーマンス向上のためのオプションのMCPサーバー（airis-mcp-gateway経由）：
+# - Serena: コード理解（2〜3倍高速）
+# - Sequential: トークン効率的な推論（30〜50%少ないトークン）
+# - Tavily: 深い研究のためのウェブ検索
+# - Context7: 公式ドキュメント検索
+# - Mindbase: すべての会話にわたるセマンティック検索（オプションの拡張）
+
+# 注：エラー学習は組み込みのReflexionMemoryを介して利用可能（インストール不要）
+# Mindbaseはセマンティック検索の拡張を提供（「recommended」プロファイルが必要）
+# MCPサーバーのインストール：https://github.com/agiletec-inc/airis-mcp-gateway
+# 詳細はdocs/mcp/mcp-integration-policy.mdを参照
+```
+
+**パフォーマンス比較：**
+- **MCPなし**：完全に機能、標準パフォーマンス ✅
+- **MCPあり**：2〜3倍高速、30〜50%少ないトークン ⚡
 
 </div>
-
-<details>
-<summary><b>⚠️ 重要：SuperClaude V3からのアップグレード</b></summary>
-
-**SuperClaude V3がインストールされている場合は、V4をインストールする前にアンインストールする必要があります：**
-
-```bash
-# V3を最初にアンインストール
-関連するファイルとディレクトリをすべて削除：
-*.md *.json および commands/
-
-# その後V4をインストール
-pipx install SuperClaude && pipx upgrade SuperClaude && SuperClaude install
-```
-
-**✅ アップグレード時に保持される内容：**
-- ✓ カスタムスラッシュコマンド（`commands/sc/`外のもの）
-- ✓ `CLAUDE.md`内のカスタム内容
-- ✓ Claude Codeの`.claude.json`、`.credentials.json`、`settings.json`、`settings.local.json`
-- ✓ 追加したカスタムエージェントとファイル
-
-**⚠️ 注意：** V3の他のSuperClaude関連`.json`ファイルは競合を引き起こす可能性があるため削除してください。
-
-</details>
-
-<details>
-<summary><b>💡 PEP 668エラーのトラブルシューティング</b></summary>
-
-```bash
-# オプション1：pipxを使用（推奨）
-pipx install SuperClaude
-
-# オプション2：ユーザーインストール
-pip install --user SuperClaude
-
-# オプション3：強制インストール（注意して使用）
-pip install --break-system-packages SuperClaude
-```
-</details>
 
 ---
 
@@ -179,59 +225,24 @@ pip install --break-system-packages SuperClaude
 
 <div align="center">
 
-## 🎉 **V4の新機能**
+## 🎉 **V4.1の新機能**
 
-> *バージョン4は、コミュニティフィードバックと実際の使用パターンに基づいて重要な改善をもたらします。*
+> *バージョン4.1は、スラッシュコマンドアーキテクチャの安定化、エージェント機能の強化、ドキュメントの改善に焦点を当てています。*
 
 <table>
 <tr>
 <td width="50%">
 
 ### 🤖 **よりスマートなエージェントシステム**
-**14の専門エージェント**がドメイン専門知識を持ちます：
+ドメイン専門知識を持つ**16の専門エージェント**：
+- PM Agentは体系的なドキュメントを通じて継続的な学習を保証
+- 自律的なウェブ研究のための深い研究エージェント
 - セキュリティエンジニアが実際の脆弱性をキャッチ
 - フロントエンドアーキテクトがUIパターンを理解
 - コンテキストに基づく自動調整
 - オンデマンドでドメイン固有の専門知識
 
 </td>
-<td width="50%">
-
-### 📝 **改良された名前空間**
-すべてのコマンドに**`/sc:`プレフィックス**：
-- カスタムコマンドとの競合なし
-- 完全なライフサイクルをカバーする21のコマンド
-- ブレインストーミングからデプロイメントまで
-- 整理されたコマンド構造
-
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-### 🔧 **MCPサーバー統合**
-**6つの強力なサーバー**が連携：
-- **Context7** → 最新ドキュメント
-- **Sequential** → 複雑な分析
-- **Magic** → UIコンポーネント生成
-- **Playwright** → ブラウザテスト
-- **Morphllm** → 一括変換
-- **Serena** → セッション持続
-
-</td>
-<td width="50%">
-
-### 🎯 **動作モード**
-異なるコンテキストのための**5つの適応モード**：
-- **ブレインストーミング** → 適切な質問をする
-- **オーケストレーション** → 効率的なツール調整
-- **トークン効率** → 30-50%のコンテキスト節約
-- **タスク管理** → システム化された組織
-- **内省** → メタ認知分析
-
-</td>
-</tr>
-<tr>
 <td width="50%">
 
 ### ⚡ **最適化されたパフォーマンス**
@@ -242,6 +253,37 @@ pip install --break-system-packages SuperClaude
 - 複雑な操作の有効化
 
 </td>
+</tr>
+<tr>
+<td width="50%">
+
+### 🔧 **MCPサーバー統合**
+**8つの強力なサーバー**（airis-mcp-gateway経由）：
+- **Tavily** → プライマリウェブ検索（深い研究）
+- **Serena** → セッション持続性とメモリ
+- **Mindbase** → セッション横断学習（ゼロフットプリント）
+- **Sequential** → トークン効率的な推論
+- **Context7** → 公式ドキュメント検索
+- **Playwright** → JavaScript重量コンテンツ抽出
+- **Magic** → UIコンポーネント生成
+- **Chrome DevTools** → パフォーマンス分析
+
+</td>
+<td width="50%">
+
+### 🎯 **動作モード**
+異なるコンテキストのための**7つの適応モード**：
+- **ブレインストーミング** → 適切な質問をする
+- **ビジネスパネル** → 多専門家戦略分析
+- **深い研究** → 自律的なウェブ研究
+- **オーケストレーション** → 効率的なツール調整
+- **トークン効率** → 30-50%のコンテキスト節約
+- **タスク管理** → システム化された組織
+- **内省** → メタ認知分析
+
+</td>
+</tr>
+<tr>
 <td width="50%">
 
 ### 📚 **ドキュメントの全面見直し**
@@ -252,8 +294,110 @@ pip install --break-system-packages SuperClaude
 - より良いナビゲーション構造
 
 </td>
+<td width="50%">
+
+### 🧪 **安定性の強化**
+**信頼性に焦点：**
+- コアコマンドのバグ修正
+- テストカバレッジの改善
+- より堅牢なエラー処理
+- CI/CDパイプラインの改善
+
+</td>
 </tr>
 </table>
+
+</div>
+
+---
+
+<div align="center">
+
+## 🔬 **深い研究機能**
+
+### **DRエージェントアーキテクチャに準拠した自律的ウェブ研究**
+
+SuperClaude v4.2は、自律的、適応的、インテリジェントなウェブ研究を可能にする包括的な深い研究機能を導入します。
+
+<table>
+<tr>
+<td width="50%">
+
+### 🎯 **適応的計画**
+**3つのインテリジェント戦略：**
+- **計画のみ**：明確なクエリに対する直接実行
+- **意図計画**：曖昧なリクエストの明確化
+- **統一**：協調的な計画の洗練（デフォルト）
+
+</td>
+<td width="50%">
+
+### 🔄 **マルチホップ推論**
+**最大5回の反復検索：**
+- エンティティ拡張（論文 → 著者 → 作品）
+- 概念深化（トピック → 詳細 → 例）
+- 時間的進行（現在 → 歴史）
+- 因果連鎖（効果 → 原因 → 予防）
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### 📊 **品質スコアリング**
+**信頼度ベースの検証：**
+- ソースの信頼性評価（0.0-1.0）
+- カバレッジの完全性追跡
+- 統合の一貫性評価
+- 最小しきい値：0.6、目標：0.8
+
+</td>
+<td width="50%">
+
+### 🧠 **ケースベース学習**
+**セッション横断インテリジェンス：**
+- パターン認識と再利用
+- 時間経過による戦略最適化
+- 成功したクエリ式の保存
+- パフォーマンス改善追跡
+
+</td>
+</tr>
+</table>
+
+### **研究コマンドの使用**
+
+```bash
+# 自動深度での基本研究
+/research "2024年の最新AI開発"
+
+# 制御された研究深度（TypeScriptのオプション経由）
+/research "量子コンピューティングのブレークスルー"  # depth: exhaustive
+
+# 特定の戦略選択
+/research "市場分析"  # strategy: planning-only
+
+# ドメインフィルタリング研究（Tavily MCP統合）
+/research "Reactパターン"  # domains: reactjs.org,github.com
+```
+
+### **研究深度レベル**
+
+| 深度 | ソース | ホップ | 時間 | 最適な用途 |
+|:-----:|:-------:|:----:|:----:|----------|
+| **クイック** | 5-10 | 1 | ~2分 | 簡単な事実、単純なクエリ |
+| **標準** | 10-20 | 3 | ~5分 | 一般的な研究（デフォルト） |
+| **深い** | 20-40 | 4 | ~8分 | 包括的な分析 |
+| **徹底的** | 40+ | 5 | ~10分 | 学術レベルの研究 |
+
+### **統合ツールオーケストレーション**
+
+深い研究システムは複数のツールをインテリジェントに調整します：
+- **Tavily MCP**：プライマリウェブ検索と発見
+- **Playwright MCP**：複雑なコンテンツ抽出
+- **Sequential MCP**：マルチステップ推論と統合
+- **Serena MCP**：メモリと学習の持続性
+- **Context7 MCP**：技術ドキュメント検索
 
 </div>
 
@@ -284,22 +428,22 @@ pip install --break-system-packages SuperClaude
 </td>
 <td valign="top">
 
-- 🎯 [**コマンドリファレンス**](docs/user-guide-jp/commands.md)  
-  *全21のスラッシュコマンド*
+- 🎯 [**スラッシュコマンド**](docs/user-guide/commands.md)
+  *完全な `/sc` コマンドリスト*
 
-- 🤖 [**エージェントガイド**](docs/user-guide-jp/agents.md)  
-  *14の専門エージェント*
+- 🤖 [**エージェントガイド**](docs/user-guide/agents.md)
+  *16の専門エージェント*
 
-- 🎨 [**動作モード**](docs/user-guide-jp/modes.md)  
-  *5つの適応モード*
+- 🎨 [**動作モード**](docs/user-guide/modes.md)
+  *7つの適応モード*
 
-- 🚩 [**フラグガイド**](docs/user-guide-jp/flags.md)  
+- 🚩 [**フラグガイド**](docs/user-guide/flags.md)
   *動作制御パラメータ*
 
-- 🔧 [**MCPサーバー**](docs/user-guide-jp/mcp-servers.md)  
-  *6つのサーバー統合*
+- 🔧 [**MCPサーバー**](docs/user-guide/mcp-servers.md)
+  *8つのサーバー統合*
 
-- 💼 [**セッション管理**](docs/user-guide-jp/session-management.md)  
+- 💼 [**セッション管理**](docs/user-guide/session-management.md)
   *状態の保存と復元*
 
 </td>
@@ -317,13 +461,10 @@ pip install --break-system-packages SuperClaude
 </td>
 <td valign="top">
 
-- ✨ [**ベストプラクティス**](docs/reference/basic-examples.md)
-  *プロのコツとパターン*
-
-- 📓 [**サンプル集**](docs/reference/examples-cookbook.md)  
+- 📓 [**サンプル集**](docs/reference/examples-cookbook.md)
   *実際の使用例*
 
-- 🔍 [**トラブルシューティング**](docs/reference/troubleshooting.md)  
+- 🔍 [**トラブルシューティング**](docs/reference/troubleshooting.md)
   *一般的な問題と修正*
 
 </td>
