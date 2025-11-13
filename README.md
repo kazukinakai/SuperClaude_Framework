@@ -65,12 +65,12 @@
 
 ## 📊 **Framework Statistics**
 
-| **Plugins** | **Agents** | **Modes** | **MCP Servers** |
+| **Commands** | **Agents** | **Modes** | **MCP Servers** |
 |:------------:|:----------:|:---------:|:---------------:|
-| **3** | **16** | **7** | **8** |
-| Plugin Commands | Specialized AI | Behavioral | Integrations |
+| **30** | **16** | **7** | **8** |
+| Slash Commands | Specialized AI | Behavioral | Integrations |
 
-Three core plugins: **PM Agent** (orchestration), **Research** (web search), **Index** (context optimization).
+30 slash commands covering the complete development lifecycle from brainstorming to deployment.
 
 </div>
 
@@ -116,7 +116,7 @@ SuperClaude currently uses slash commands.
 # Install from PyPI
 pipx install superclaude
 
-# Install commands (installs /research, /index-repo, /agent, /recommend)
+# Install commands (installs all 30 slash commands)
 superclaude install
 
 # Verify installation
@@ -124,12 +124,13 @@ superclaude install --list
 superclaude doctor
 ```
 
-After installation, restart Claude Code to use the commands:
-- `/sc:research` - Deep web research with parallel search
-- `/sc:index-repo` - Repository indexing for context optimization
-- `/sc:agent` - Specialized AI agents
-- `/sc:recommend` - Command recommendations
-- `/sc` - Show all available SuperClaude commands
+After installation, restart Claude Code to use 30 commands including:
+- `/sc:research` - Deep web research
+- `/sc:brainstorm` - Structured brainstorming
+- `/sc:implement` - Code implementation
+- `/sc:test` - Testing workflows
+- `/sc:pm` - Project management
+- `/sc` - Show all 30 available commands
 
 **Option 2: Direct Installation from Git**
 ```bash
@@ -442,8 +443,8 @@ The Deep Research system intelligently coordinates multiple tools:
 </td>
 <td valign="top">
 
-- 🎯 [**Slash Commands**](docs/user-guide/commands.md)
-  *Full list of `/sc` commands*
+- 🎯 [**Slash Commands**](docs/reference/commands-list.md)
+  *All 30 commands organized by category*
 
 - 🤖 [**Agents Guide**](docs/user-guide/agents.md)  
   *16 specialized agents*
@@ -561,3 +562,61 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 </p>
 
 </div>
+
+---
+
+## 📋 **All 30 Commands**
+
+<details>
+<summary><b>Click to expand full command list</b></summary>
+
+### 🧠 Planning & Design (4)
+- `/brainstorm` - Structured brainstorming
+- `/design` - System architecture
+- `/estimate` - Time/effort estimation
+- `/spec-panel` - Specification analysis
+
+### 💻 Development (5)
+- `/implement` - Code implementation
+- `/build` - Build workflows
+- `/improve` - Code improvements
+- `/cleanup` - Refactoring
+- `/explain` - Code explanation
+
+### 🧪 Testing & Quality (4)
+- `/test` - Test generation
+- `/analyze` - Code analysis
+- `/troubleshoot` - Debugging
+- `/reflect` - Retrospectives
+
+### 📚 Documentation (2)
+- `/document` - Doc generation
+- `/help` - Command help
+
+### 🔧 Version Control (1)
+- `/git` - Git operations
+
+### 📊 Project Management (3)
+- `/pm` - Project management
+- `/task` - Task tracking
+- `/workflow` - Workflow automation
+
+### 🔍 Research & Analysis (2)
+- `/research` - Deep web research
+- `/business-panel` - Business analysis
+
+### 🎯 Utilities (9)
+- `/agent` - AI agents
+- `/index-repo` - Repository indexing
+- `/index` - Indexing alias
+- `/recommend` - Command recommendations
+- `/select-tool` - Tool selection
+- `/spawn` - Parallel tasks
+- `/load` - Load sessions
+- `/save` - Save sessions
+- `/sc` - Show all commands
+
+[**📖 View Detailed Command Reference →**](docs/reference/commands-list.md)
+
+</details>
+
