@@ -90,6 +90,38 @@ def install(target: str, force: bool, list_only: bool):
 
 
 @main.command()
+@click.option(
+    "--target",
+    default="~/.claude/commands/sc",
+    help="Installation directory (default: ~/.claude/commands/sc)",
+)
+def update(target: str):
+    """
+    Update SuperClaude commands to latest version
+
+    Re-installs all slash commands to match the current package version.
+    This is a convenience command equivalent to 'install --force'.
+
+    Example:
+        superclaude update
+        superclaude update --target /custom/path
+    """
+    from .install_commands import install_commands
+
+    target_path = Path(target).expanduser()
+
+    click.echo(f"🔄 Updating SuperClaude commands to version {__version__}...")
+    click.echo()
+
+    success, message = install_commands(target_path=target_path, force=True)
+
+    click.echo(message)
+
+    if not success:
+        sys.exit(1)
+
+
+@main.command()
 @click.argument("skill_name")
 @click.option(
     "--target",
