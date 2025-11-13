@@ -94,32 +94,32 @@ def _get_commands_source() -> Path:
     Get source directory for commands
 
     Commands are stored in:
-        plugins/superclaude/commands/
+        1. package_root/commands/ (installed package)
+        2. plugins/superclaude/commands/ (source checkout)
 
     Returns:
         Path to commands source directory
     """
-    # Get package root (src/superclaude/)
+    # Get package root (superclaude/ when installed, src/superclaude/ in dev)
     package_root = Path(__file__).resolve().parent.parent
 
-    # Check if running from source checkout
+    # Priority 1: Try commands/ in package (for installed package via pipx/pip)
+    # This will be site-packages/superclaude/commands/
+    package_commands_dir = package_root / "commands"
+    if package_commands_dir.exists():
+        return package_commands_dir
+
+    # Priority 2: Try plugins/superclaude/commands/ in project root (for source checkout)
     # package_root = src/superclaude/
     # repo_root = src/superclaude/../../ = project root
     repo_root = package_root.parent.parent
+    plugins_commands_dir = repo_root / "plugins" / "superclaude" / "commands"
 
-    # Try plugins/superclaude/commands/ in project root
-    commands_dir = repo_root / "plugins" / "superclaude" / "commands"
+    if plugins_commands_dir.exists():
+        return plugins_commands_dir
 
-    if commands_dir.exists():
-        return commands_dir
-
-    # If not found, try relative to package (for installed package)
-    # This would be in site-packages/superclaude/commands/
-    alt_commands_dir = package_root / "commands"
-    if alt_commands_dir.exists():
-        return alt_commands_dir
-
-    return commands_dir  # Return first candidate even if doesn't exist
+    # If neither exists, return package location (will fail with clear error)
+    return package_commands_dir
 
 
 def list_available_commands() -> List[str]:
