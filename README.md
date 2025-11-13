@@ -119,13 +119,18 @@ pipx install superclaude
 # Install commands (installs all 30 slash commands)
 superclaude install
 
+# Install MCP servers (optional, for enhanced capabilities)
+superclaude mcp --list         # List available MCP servers
+superclaude mcp                # Interactive installation
+superclaude mcp --servers tavily --servers context7  # Install specific servers
+
 # Verify installation
 superclaude install --list
 superclaude doctor
 ```
 
 After installation, restart Claude Code to use 30 commands including:
-- `/sc:research` - Deep web research
+- `/sc:research` - Deep web research (enhanced with Tavily MCP)
 - `/sc:brainstorm` - Structured brainstorming
 - `/sc:implement` - Code implementation
 - `/sc:test` - Testing workflows
@@ -273,14 +278,27 @@ For **2-3x faster** execution and **30-50% fewer tokens**, optionally install MC
 <td width="50%">
 
 ### 🔧 **MCP Server Integration**
-**8 powerful servers** (via airis-mcp-gateway):
+**8 powerful servers** with easy CLI installation:
+
+```bash
+# List available MCP servers
+superclaude mcp --list
+
+# Install specific servers
+superclaude mcp --servers tavily context7
+
+# Interactive installation
+superclaude mcp
+```
+
+**Available servers:**
 - **Tavily** → Primary web search (Deep Research)
-- **Serena** → Session persistence & memory
-- **Mindbase** → Cross-session learning (zero-footprint)
-- **Sequential** → Token-efficient reasoning
 - **Context7** → Official documentation lookup
-- **Playwright** → JavaScript-heavy content extraction
+- **Sequential-Thinking** → Multi-step reasoning
+- **Serena** → Session persistence & memory
+- **Playwright** → Cross-browser automation
 - **Magic** → UI component generation
+- **Morphllm-Fast-Apply** → Context-aware code modifications
 - **Chrome DevTools** → Performance analysis
 
 </td>

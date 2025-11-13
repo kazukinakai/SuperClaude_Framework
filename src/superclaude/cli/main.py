@@ -90,6 +90,44 @@ def install(target: str, force: bool, list_only: bool):
 
 
 @main.command()
+@click.option("--servers", "-s", multiple=True, help="Specific MCP servers to install")
+@click.option(
+    "--list", "list_only", is_flag=True, help="List available MCP servers"
+)
+@click.option("--scope", default="user", type=click.Choice(["local", "project", "user"]), help="Installation scope")
+@click.option("--dry-run", is_flag=True, help="Show what would be installed without actually installing")
+def mcp(servers, list_only, scope, dry_run):
+    """
+    Install and manage MCP servers for Claude Code
+
+    Examples:
+        superclaude mcp --list
+        superclaude mcp --servers tavily --servers context7
+        superclaude mcp --scope project
+        superclaude mcp --dry-run
+    """
+    from .install_mcp import install_mcp_servers, list_available_servers
+
+    if list_only:
+        list_available_servers()
+        return
+
+    click.echo(f"🔌 Installing MCP servers (scope: {scope})...")
+    click.echo()
+
+    success, message = install_mcp_servers(
+        selected_servers=list(servers) if servers else None,
+        scope=scope,
+        dry_run=dry_run
+    )
+
+    click.echo(message)
+
+    if not success:
+        sys.exit(1)
+
+
+@main.command()
 @click.option(
     "--target",
     default="~/.claude/commands/sc",

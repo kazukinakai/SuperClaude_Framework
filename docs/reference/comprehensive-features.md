@@ -42,6 +42,37 @@ All slash commands are documented in [commands-list.md](commands-list.md)
 
 ## 🔌 MCP Server Integration (8)
 
+### CLI Installation
+
+SuperClaude provides a convenient CLI command for MCP server installation:
+
+```bash
+# List available MCP servers
+superclaude mcp --list
+
+# Interactive installation
+superclaude mcp
+
+# Install specific servers
+superclaude mcp --servers tavily --servers context7
+
+# Install with specific scope
+superclaude mcp --servers tavily --scope project
+
+# Dry run to see what would be installed
+superclaude mcp --dry-run
+```
+
+### Available Servers
+1. **sequential-thinking** - Multi-step problem solving and systematic analysis
+2. **context7** - Official library documentation and code examples
+3. **magic** - Modern UI component generation and design systems (requires API key)
+4. **playwright** - Cross-browser E2E testing and automation
+5. **serena** - Semantic code analysis and intelligent editing
+6. **morphllm-fast-apply** - Fast Apply capability for context-aware code modifications (requires API key)
+7. **tavily** - Web search and real-time information retrieval (requires API key)
+8. **chrome-devtools** - Chrome DevTools debugging and performance analysis
+
 ### Documentation Files
 1. **MCP_Tavily.md** - Primary web search
 2. **MCP_Serena.md** - Session persistence & memory
@@ -52,7 +83,7 @@ All slash commands are documented in [commands-list.md](commands-list.md)
 7. **MCP_Morphllm.md** - Model transformation
 8. **MCP_Chrome-DevTools.md** - Performance analysis
 
-### Configuration Files  
+### Configuration Files
 - context7.json
 - magic.json
 - morphllm.json
