@@ -70,6 +70,7 @@ superclaude = "superclaude.pytest_plugin"
 packages = ["src/superclaude"]
 include = [
     "src/superclaude/skills/confidence-check/**",
+    "src/superclaude/commands/**/*.md",
 ]
 
 [tool.hatch.build.targets.sdist]
