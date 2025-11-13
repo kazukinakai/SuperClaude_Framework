@@ -69,8 +69,14 @@ superclaude = "superclaude.pytest_plugin"
 [tool.hatch.build.targets.wheel]
 packages = ["src/superclaude"]
 include = [
-    "src/superclaude/skills/confidence-check/**",
+    "src/superclaude/skills/**/*.md",
+    "src/superclaude/skills/**/*.ts",
+    "src/superclaude/skills/**/*.json",
     "src/superclaude/commands/**/*.md",
+    "src/superclaude/agents/**/*.md",
+    "src/superclaude/hooks/**/*.json",
+    "src/superclaude/scripts/**/*.py",
+    "src/superclaude/scripts/**/*.sh",
 ]
 
 [tool.hatch.build.targets.sdist]
