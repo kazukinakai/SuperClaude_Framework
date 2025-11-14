@@ -5,7 +5,7 @@ AI-enhanced development framework for Claude Code.
 Provides pytest plugin for enhanced testing and optional skills system.
 """
 
-__version__ = "4.1.8"
+__version__ = "4.1.9"
 __author__ = "NomenAK, Mithun Gowda B"
 
 # Expose main components

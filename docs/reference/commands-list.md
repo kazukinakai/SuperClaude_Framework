@@ -1,6 +1,6 @@
 # SuperClaude Commands Reference
 
-Complete list of all 30 slash commands available in SuperClaude Framework v4.1.8+
+Complete list of all 30 slash commands available in SuperClaude Framework v4.1.9+
 
 ## Command Categories
 

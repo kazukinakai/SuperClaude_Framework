@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "superclaude"
-version = "4.1.8"
+version = "4.1.9"
 description = "AI-enhanced development framework for Claude Code - pytest plugin with optional skills"
 readme = "README.md"
 license = {text = "MIT"}
@@ -67,8 +67,9 @@ superclaude = "superclaude.cli.main:main"
 superclaude = "superclaude.pytest_plugin"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/superclaude"]
+packages = ["src/superclaude", "plugins/superclaude"]
 include = [
+    "src/superclaude/**/*.py",
     "src/superclaude/skills/**/*.md",
     "src/superclaude/skills/**/*.ts",
     "src/superclaude/skills/**/*.json",
@@ -82,11 +83,17 @@ include = [
     "src/superclaude/hooks/**/*.json",
     "src/superclaude/scripts/**/*.py",
     "src/superclaude/scripts/**/*.sh",
+    "plugins/superclaude/**/*.py",
+    "plugins/superclaude/**/*.md",
+    "plugins/superclaude/**/*.ts",
+    "plugins/superclaude/**/*.json",
+    "plugins/superclaude/**/*.sh",
 ]
 
 [tool.hatch.build.targets.sdist]
 include = [
     "src/",
+    "plugins/",
     "tests/",
     "README.md",
     "LICENSE",

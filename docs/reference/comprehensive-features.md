@@ -1,6 +1,6 @@
 # SuperClaude Framework - Comprehensive Feature List
 
-Complete inventory of all features restored in v4.1.8+
+Complete inventory of all features restored in v4.1.9+
 
 ## 📋 Commands (30)
 
