@@ -68,13 +68,9 @@ superclaude = "superclaude.pytest_plugin"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/superclaude"]
-include = [
-    "plugins/**/*.py",
-    "plugins/**/*.md",
-    "plugins/**/*.ts",
-    "plugins/**/*.json",
-    "plugins/**/*.sh",
-]
+
+[tool.hatch.build.targets.wheel.shared-data]
+"plugins" = "share/superclaude/plugins"
 
 [tool.hatch.build.targets.sdist]
 include = [
