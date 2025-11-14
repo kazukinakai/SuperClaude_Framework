@@ -67,27 +67,13 @@ superclaude = "superclaude.cli.main:main"
 superclaude = "superclaude.pytest_plugin"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/superclaude", "plugins/superclaude"]
+packages = ["src/superclaude"]
 include = [
-    "src/superclaude/**/*.py",
-    "src/superclaude/skills/**/*.md",
-    "src/superclaude/skills/**/*.ts",
-    "src/superclaude/skills/**/*.json",
-    "src/superclaude/commands/**/*.md",
-    "src/superclaude/agents/**/*.md",
-    "src/superclaude/modes/**/*.md",
-    "src/superclaude/mcp/**/*.md",
-    "src/superclaude/mcp/**/*.json",
-    "src/superclaude/core/**/*.md",
-    "src/superclaude/examples/**/*.md",
-    "src/superclaude/hooks/**/*.json",
-    "src/superclaude/scripts/**/*.py",
-    "src/superclaude/scripts/**/*.sh",
-    "plugins/superclaude/**/*.py",
-    "plugins/superclaude/**/*.md",
-    "plugins/superclaude/**/*.ts",
-    "plugins/superclaude/**/*.json",
-    "plugins/superclaude/**/*.sh",
+    "plugins/**/*.py",
+    "plugins/**/*.md",
+    "plugins/**/*.ts",
+    "plugins/**/*.json",
+    "plugins/**/*.sh",
 ]
 
 [tool.hatch.build.targets.sdist]
