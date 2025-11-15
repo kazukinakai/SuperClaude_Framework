@@ -22,6 +22,32 @@
 - Stable network connection for some servers
 - Sufficient system memory (2GB+ recommended)
 
+### AIRIS MCP Gateway UI Update (April 2025)
+
+> **Summary:** AIRIS MCP Gateway now ships **one** management UI—`apps/settings`. The legacy Dynamic Profile WebUI bundles have been removed upstream. If you previously referenced `apps/webui` in docs or scripts, update them to point at the Settings UI endpoint.
+
+**What Changed**
+
+- ✅ `apps/settings` contains the new AI-managed dashboard (status visibility + API-key storage).
+- ❌ `apps/webui` / `apps/webui-old` were deleted in [`3c821e5e`](https://github.com/agiletec-inc/airis-mcp-gateway/commit/3c821e5e3fdfe2cad050daaaf027c063a696cee7) to avoid duplicate UX.
+- 📘 The upstream README documents Settings UI as the only surface: <https://github.com/agiletec-inc/airis-mcp-gateway#quick-start>.
+
+**How to Launch Locally**
+
+```bash
+git clone https://github.com/agiletec-inc/airis-mcp-gateway.git
+cd airis-mcp-gateway
+cp .env.example .env
+just up
+# Settings UI: http://ui.gateway.localhost:5273
+```
+
+**Implications for SuperClaude**
+
+- When instructing users to manage MCP servers, link to the Settings UI (no more WebUI references).
+- Screenshots / walkthroughs should show the refreshed dashboard with AI-managed state.
+- Automation scripts should assume AIRIS handles server enablement—users only need to input secrets.
+
 ## Installation and Configuration Issues
 
 ### Node.js and npm Problems
