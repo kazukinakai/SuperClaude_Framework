@@ -161,19 +161,44 @@ We are actively working on a new TypeScript plugin system (see issue [#419](http
 
 ### **Enhanced Performance (Optional MCPs)**
 
-For **2-3x faster** execution and **30-50% fewer tokens**, optionally install MCP servers:
+For **2-3x faster** execution and **30-50% fewer tokens**, you have two installation options:
+
+**Option 1: AIRIS MCP Gateway (Recommended - One-Step Setup)**
+
+Unified endpoint for 25+ MCP servers with 90% token reduction:
 
 ```bash
-# Optional MCP servers for enhanced performance (via airis-mcp-gateway):
+# 1. Start the Gateway
+git clone https://github.com/agiletec-inc/airis-mcp-gateway.git
+cd airis-mcp-gateway
+just up
+
+# 2. Connect to Claude Code
+claude mcp add --transport http airis-mcp-gateway http://api.gateway.localhost:9400/api/v1/mcp
+```
+
+**Benefits:**
+- ✅ 25+ servers in one endpoint (Serena, Sequential, Tavily, Context7, Mindbase, etc.)
+- ✅ 90% token reduction via schema partitioning
+- ✅ Native HTTP transport (no Docker bridge)
+- ✅ Hot-reload server management via Settings UI
+
+**Option 2: Individual Server Installation (Advanced)**
+
+For users who prefer individual server control:
+
+```bash
+# Install MCP servers individually via superclaude CLI
+superclaude mcp --list         # List available servers
+superclaude mcp                # Interactive installation
+superclaude mcp --servers tavily context7 serena sequential
+
+# Available servers:
 # - Serena: Code understanding (2-3x faster)
 # - Sequential: Token-efficient reasoning (30-50% fewer tokens)
 # - Tavily: Web search for Deep Research
 # - Context7: Official documentation lookup
-# - Mindbase: Semantic search across all conversations (optional enhancement)
-
-# Note: Error learning available via built-in ReflexionMemory (no installation required)
-# Mindbase provides semantic search enhancement (requires "recommended" profile)
-# Install MCP servers: https://github.com/agiletec-inc/airis-mcp-gateway
+# - Mindbase: Semantic search across conversations
 # See docs/mcp/mcp-integration-policy.md for details
 ```
 
