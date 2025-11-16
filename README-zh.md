@@ -141,25 +141,64 @@ cd SuperClaude_Framework
 
 ### **增强性能（可选MCP）**
 
-要获得**2-3倍**更快的执行速度和**30-50%**更少的token消耗，可选择安装MCP服务器：
+SuperClaude开箱即用功能完整，但MCP集成可实现**快2-3倍的执行速度**和**减少30-50%的token消耗**。
+
+#### **选项1: AIRIS MCP Gateway（推荐）**
+
+**为什么选择AIRIS Gateway？**
+
+- 🚀 **一步设置**: 一条命令连接25+个MCP服务器
+- 📉 **减少90% Token**: 架构分区大幅减少上下文预加载
+- 🎯 **统一管理**: 通过Settings UI控制所有服务器
+- ⚡ **原生HTTP传输**: 无Docker桥接开销
+
+**预加载问题**: 单独安装MCP服务器时，Claude Code会在**启动时加载所有工具架构**。8个服务器可能在您开始工作前就消耗10,000+个token。AIRIS Gateway通过分区架构并仅加载所需内容来解决此问题。
+
+**安装步骤:**
 
 ```bash
-# 用于增强性能的可选MCP服务器（通过airis-mcp-gateway）：
+# 1. 启动Gateway
+git clone https://github.com/agiletec-inc/airis-mcp-gateway.git
+cd airis-mcp-gateway
+cp .env.example .env
+just up
+
+# 2. 连接到Claude Code
+claude mcp add --transport http airis-mcp-gateway http://api.gateway.localhost:9400/api/v1/mcp
+
+# 3. 通过Settings UI管理服务器
+# 打开: http://ui.gateway.localhost:5273
+```
+
+**可用服务器**: Serena, Sequential, Tavily, Context7, Mindbase, Playwright等20+个。
+
+---
+
+#### **选项2: 单独服务器安装（高级用户）**
+
+对于希望对每个服务器进行细粒度控制的用户：
+
+```bash
+# 通过superclaude CLI单独安装MCP服务器
+superclaude mcp --list         # 列出可用服务器
+superclaude mcp                # 交互式安装
+superclaude mcp --servers tavily context7 serena sequential
+
+# 可用服务器:
 # - Serena: 代码理解（快2-3倍）
 # - Sequential: Token高效推理（减少30-50% token）
 # - Tavily: 用于深度研究的网络搜索
 # - Context7: 官方文档查找
-# - Mindbase: 跨所有对话的语义搜索（可选增强）
-
-# 注意：错误学习通过内置的ReflexionMemory提供（无需安装）
-# Mindbase提供语义搜索增强（需要"recommended"配置文件）
-# 安装MCP服务器：https://github.com/agiletec-inc/airis-mcp-gateway
+# - Mindbase: 跨对话的语义搜索
 # 详见 docs/mcp/mcp-integration-policy.md
 ```
 
-**性能对比：**
-- **不使用MCP**：功能完整，标准性能 ✅
-- **使用MCP**：快2-3倍，减少30-50% token ⚡
+⚠️ **注意**: 单独安装会在Claude Code启动时加载所有工具架构。每个服务器约增加1,000-2,000个token的上下文预加载。AIRIS Gateway避免了这种开销。
+
+**性能对比:**
+- **不使用MCP**: 功能完整，标准性能 ✅
+- **使用AIRIS Gateway**: 快2-3倍，减少30-50% token，减少90%架构 ⚡
+- **使用单独MCP**: 快2-3倍，但启动时上下文预加载较高 🔶
 
 </div>
 

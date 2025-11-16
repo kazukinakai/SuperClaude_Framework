@@ -144,25 +144,64 @@ cd SuperClaude_Framework
 
 ### **향상된 성능 (선택적 MCP)**
 
-**2-3배** 빠른 실행과 **30-50%** 적은 토큰을 위해 선택적으로 MCP 서버를 설치할 수 있습니다:
+SuperClaude는 단독으로도 완전히 작동하지만, MCP 통합으로 **2-3배 빠른 실행**과 **30-50% 적은 토큰**을 실현할 수 있습니다.
+
+#### **옵션 1: AIRIS MCP Gateway (권장)**
+
+**왜 AIRIS Gateway인가?**
+
+- 🚀 **원스텝 설정**: 하나의 명령으로 25개 이상의 MCP 서버 연결
+- 📉 **90% 토큰 감소**: 스키마 파티셔닝으로 컨텍스트 프리로드 대폭 감소
+- 🎯 **통합 관리**: Settings UI에서 모든 서버를 중앙 관리
+- ⚡ **네이티브 HTTP 전송**: Docker 브리지 오버헤드 없음
+
+**프리로드 문제**: MCP 서버를 개별적으로 설치하면 Claude Code가 **시작 시 모든 도구 스키마를 로드**합니다. 8개의 서버로 작업을 시작하기 전에 10,000개 이상의 토큰을 소비할 수 있습니다. AIRIS Gateway는 스키마를 파티션하고 필요한 것만 로드하여 이 문제를 해결합니다.
+
+**설치 방법:**
 
 ```bash
-# 향상된 성능을 위한 선택적 MCP 서버 (airis-mcp-gateway 경유):
+# 1. Gateway 시작
+git clone https://github.com/agiletec-inc/airis-mcp-gateway.git
+cd airis-mcp-gateway
+cp .env.example .env
+just up
+
+# 2. Claude Code와 연결
+claude mcp add --transport http airis-mcp-gateway http://api.gateway.localhost:9400/api/v1/mcp
+
+# 3. Settings UI에서 서버 관리
+# 열기: http://ui.gateway.localhost:5273
+```
+
+**사용 가능한 서버**: Serena, Sequential, Tavily, Context7, Mindbase, Playwright 등 20개 이상.
+
+---
+
+#### **옵션 2: 개별 서버 설치 (고급 사용자)**
+
+각 서버를 개별적으로 관리하려는 사용자를 위한 방법:
+
+```bash
+# superclaude CLI로 MCP 서버 개별 설치
+superclaude mcp --list         # 사용 가능한 서버 목록
+superclaude mcp                # 대화형 설치
+superclaude mcp --servers tavily context7 serena sequential
+
+# 사용 가능한 서버:
 # - Serena: 코드 이해 (2-3배 빠름)
 # - Sequential: 토큰 효율적 추론 (30-50% 적은 토큰)
 # - Tavily: 심층 연구를 위한 웹 검색
 # - Context7: 공식 문서 검색
-# - Mindbase: 모든 대화에 걸친 의미론적 검색 (선택적 향상)
-
-# 참고: 오류 학습은 내장 ReflexionMemory를 통해 사용 가능 (설치 불필요)
-# Mindbase는 의미론적 검색 향상을 제공 ("recommended" 프로필 필요)
-# MCP 서버 설치: https://github.com/agiletec-inc/airis-mcp-gateway
+# - Mindbase: 대화 간 의미론적 검색
 # 자세한 내용은 docs/mcp/mcp-integration-policy.md 참조
 ```
 
+⚠️ **참고**: 개별 설치는 Claude Code 시작 시 모든 도구 스키마를 로드합니다. 각 서버는 약 1,000-2,000개의 토큰을 컨텍스트 프리로드에 추가합니다. AIRIS Gateway는 이 오버헤드를 방지합니다.
+
 **성능 비교:**
 - **MCP 없음**: 완전히 기능함, 표준 성능 ✅
-- **MCP 사용**: 2-3배 빠름, 30-50% 적은 토큰 ⚡
+- **AIRIS Gateway 사용**: 2-3배 빠름, 30-50% 적은 토큰, 90% 스키마 감소 ⚡
+- **개별 MCP 사용**: 2-3배 빠름, 하지만 시작 시 컨텍스트 프리로드 높음 🔶
 
 </div>
 

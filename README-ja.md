@@ -141,25 +141,64 @@ cd SuperClaude_Framework
 
 ### **パフォーマンス向上（オプションのMCP）**
 
-**2〜3倍**高速な実行と**30〜50%**少ないトークンのために、オプションでMCPサーバーをインストールできます：
+SuperClaudeは単体でも完全に機能しますが、MCP統合により**2〜3倍高速な実行**と**30〜50%少ないトークン**を実現できます。
+
+#### **オプション1: AIRIS MCP Gateway（推奨）**
+
+**なぜAIRIS Gatewayなのか？**
+
+- 🚀 **ワンステップセットアップ**: 1つのコマンドで25以上のMCPサーバーに接続
+- 📉 **90%トークン削減**: スキーマパーティショニングによりコンテキストプリロードを大幅削減
+- 🎯 **統合管理**: Settings UIから全サーバーを一元管理
+- ⚡ **ネイティブHTTPトランスポート**: Dockerブリッジのオーバーヘッドなし
+
+**プリロード問題**: MCPサーバーを個別にインストールすると、Claude Codeは**起動時にすべてのツールスキーマを読み込みます**。8つのサーバーで10,000トークン以上を消費してから作業開始することになります。AIRIS Gatewayはスキーマをパーティション化し、必要なものだけを読み込むことでこの問題を解決します。
+
+**インストール手順:**
 
 ```bash
-# パフォーマンス向上のためのオプションのMCPサーバー（airis-mcp-gateway経由）：
+# 1. Gatewayを起動
+git clone https://github.com/agiletec-inc/airis-mcp-gateway.git
+cd airis-mcp-gateway
+cp .env.example .env
+just up
+
+# 2. Claude Codeと接続
+claude mcp add --transport http airis-mcp-gateway http://api.gateway.localhost:9400/api/v1/mcp
+
+# 3. Settings UIからサーバーを管理
+# 開く: http://ui.gateway.localhost:5273
+```
+
+**利用可能なサーバー**: Serena, Sequential, Tavily, Context7, Mindbase, Playwrightなど20以上。
+
+---
+
+#### **オプション2: 個別サーバーインストール（上級者向け）**
+
+各サーバーを個別に管理したいユーザー向け：
+
+```bash
+# superclaude CLIで個別にMCPサーバーをインストール
+superclaude mcp --list         # 利用可能なサーバーをリスト表示
+superclaude mcp                # 対話型インストール
+superclaude mcp --servers tavily context7 serena sequential
+
+# 利用可能なサーバー:
 # - Serena: コード理解（2〜3倍高速）
 # - Sequential: トークン効率的な推論（30〜50%少ないトークン）
 # - Tavily: 深い研究のためのウェブ検索
 # - Context7: 公式ドキュメント検索
-# - Mindbase: すべての会話にわたるセマンティック検索（オプションの拡張）
-
-# 注：エラー学習は組み込みのReflexionMemoryを介して利用可能（インストール不要）
-# Mindbaseはセマンティック検索の拡張を提供（「recommended」プロファイルが必要）
-# MCPサーバーのインストール：https://github.com/agiletec-inc/airis-mcp-gateway
+# - Mindbase: 会話間のセマンティック検索
 # 詳細はdocs/mcp/mcp-integration-policy.mdを参照
 ```
 
-**パフォーマンス比較：**
-- **MCPなし**：完全に機能、標準パフォーマンス ✅
-- **MCPあり**：2〜3倍高速、30〜50%少ないトークン ⚡
+⚠️ **注意**: 個別インストールではClaude Code起動時にすべてのツールスキーマが読み込まれます。各サーバーは約1,000〜2,000トークンをコンテキストプリロードに追加します。AIRIS Gatewayはこのオーバーヘッドを回避します。
+
+**パフォーマンス比較:**
+- **MCPなし**: 完全に機能、標準パフォーマンス ✅
+- **AIRIS Gateway使用**: 2〜3倍高速、30〜50%少ないトークン、90%スキーマ削減 ⚡
+- **個別MCP使用**: 2〜3倍高速だが、起動時のコンテキストプリロードが高い 🔶
 
 </div>
 

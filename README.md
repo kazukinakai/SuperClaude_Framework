@@ -161,31 +161,42 @@ We are actively working on a new TypeScript plugin system (see issue [#419](http
 
 ### **Enhanced Performance (Optional MCPs)**
 
-For **2-3x faster** execution and **30-50% fewer tokens**, you have two installation options:
+SuperClaude works fully functional out of the box, but MCP integration unlocks **2-3x faster execution** and **30-50% fewer tokens**.
 
-**Option 1: AIRIS MCP Gateway (Recommended - One-Step Setup)**
+#### **Option 1: AIRIS MCP Gateway (Recommended)**
 
-Unified endpoint for 25+ MCP servers with 90% token reduction:
+**Why AIRIS Gateway?**
+
+- 🚀 **One-Step Setup**: Connect 25+ MCP servers with a single command
+- 📉 **90% Token Reduction**: Schema partitioning drastically reduces context preload
+- 🎯 **Unified Management**: Control all servers from Settings UI
+- ⚡ **Native HTTP Transport**: No Docker bridge overhead
+
+**The Preload Problem**: When you install MCP servers individually, Claude Code loads **all tool schemas at startup**. With 8 servers, this can consume 10,000+ tokens before you even start working. AIRIS Gateway solves this by partitioning schemas and loading only what you need.
+
+**Installation:**
 
 ```bash
 # 1. Start the Gateway
 git clone https://github.com/agiletec-inc/airis-mcp-gateway.git
 cd airis-mcp-gateway
+cp .env.example .env
 just up
 
 # 2. Connect to Claude Code
 claude mcp add --transport http airis-mcp-gateway http://api.gateway.localhost:9400/api/v1/mcp
+
+# 3. Manage servers via Settings UI
+# Open: http://ui.gateway.localhost:5273
 ```
 
-**Benefits:**
-- ✅ 25+ servers in one endpoint (Serena, Sequential, Tavily, Context7, Mindbase, etc.)
-- ✅ 90% token reduction via schema partitioning
-- ✅ Native HTTP transport (no Docker bridge)
-- ✅ Hot-reload server management via Settings UI
+**Available Servers**: Serena, Sequential, Tavily, Context7, Mindbase, Playwright, and 20+ more.
 
-**Option 2: Individual Server Installation (Advanced)**
+---
 
-For users who prefer individual server control:
+#### **Option 2: Individual Server Installation (Advanced)**
+
+For users who prefer granular control over each server:
 
 ```bash
 # Install MCP servers individually via superclaude CLI
@@ -202,9 +213,12 @@ superclaude mcp --servers tavily context7 serena sequential
 # See docs/mcp/mcp-integration-policy.md for details
 ```
 
+⚠️ **Note**: Individual installation loads all tool schemas at Claude Code startup. Each server adds ~1,000-2,000 tokens to your context preload. AIRIS Gateway avoids this overhead.
+
 **Performance Comparison:**
 - **Without MCPs**: Fully functional, standard performance ✅
-- **With MCPs**: 2-3x faster, 30-50% fewer tokens ⚡
+- **With AIRIS Gateway**: 2-3x faster, 30-50% fewer tokens, 90% schema reduction ⚡
+- **With Individual MCPs**: 2-3x faster, but higher context preload at startup 🔶
 
 </div>
 
