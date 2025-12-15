@@ -167,6 +167,46 @@ export TAVILY_API_KEY="tvly-your_api_key_here"
 - `--depth deep`: 20-40 sources, comprehensive analysis
 - `--depth exhaustive`: 40+ sources, academic-level research
 
+## Unified MCP Gateway (Alternative Setup)
+
+For users who want a simpler, unified setup that manages all MCP servers through a single endpoint, **AIRIS MCP Gateway** provides:
+
+- **50 tools** from 7 default servers (airis-agent, context7, fetch, memory, sequential-thinking, serena, tavily)
+- **Single SSE endpoint** instead of 8+ separate stdio connections
+- **Lazy loading** - servers start only when needed, auto-terminate when idle
+
+### Setup
+
+```bash
+# 1. Clone and start
+git clone https://github.com/agiletec-inc/airis-mcp-gateway.git
+cd airis-mcp-gateway
+docker compose up -d
+
+# 2. Register with Claude Code
+claude mcp add --scope user --transport sse airis-mcp-gateway http://localhost:9400/sse
+```
+
+### Verify
+
+```bash
+curl http://localhost:9400/health
+curl http://localhost:9400/api/tools/combined | jq '.tools_count'
+```
+
+### Configuration
+
+Edit `mcp-config.json` to enable/disable servers, then restart:
+```bash
+docker compose restart api
+```
+
+### More Information
+
+- **Repository**: [github.com/agiletec-inc/airis-mcp-gateway](https://github.com/agiletec-inc/airis-mcp-gateway)
+
+---
+
 ## Configuration
 
 **MCP Configuration File (`~/.claude.json`):**
