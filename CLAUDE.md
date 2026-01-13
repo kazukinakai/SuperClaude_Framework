@@ -6,6 +6,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **CRITICAL**: This project uses **UV** for all Python operations. Never use `python -m`, `pip install`, or `python script.py` directly.
 
+### UV Setup (if not installed)
+
+```bash
+# macOS / Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Windows (PowerShell)
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+# Verify installation
+uv --version
+```
+
 ### Required Commands
 
 ```bash
@@ -14,6 +27,15 @@ uv run pytest                    # Run tests
 uv run pytest tests/pm_agent/   # Run specific tests
 uv pip install package           # Install dependencies
 uv run python script.py          # Execute scripts
+```
+
+### Fallback (without UV)
+
+If UV is not available, you can use standard Python commands:
+```bash
+python -m pytest                 # Instead of: uv run pytest
+pip install package              # Instead of: uv pip install package
+python script.py                 # Instead of: uv run python script.py
 ```
 
 ## 📂 Project Structure
