@@ -24,9 +24,10 @@ Process:
 """
 
 import json
+import os
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 
 class ReflexionPattern:
@@ -165,15 +166,190 @@ class ReflexionPattern:
         """
         Search for similar error in mindbase (semantic search)
 
+        Mindbase MCP provides semantic search for cross-session learning.
+        This method integrates with Mindbase when available, with graceful
+        degradation when not configured.
+
+        Configuration:
+            Set MINDBASE_ENABLED=1 to enable Mindbase integration.
+            The actual MCP calls are handled by Claude Code, so this
+            method stores/retrieves from the local mindbase cache.
+
         Args:
             error_signature: Error signature to search
 
         Returns:
             Solution dict if found, None if mindbase unavailable or no match
         """
-        # TODO: Implement mindbase integration
-        # For now, return None (fallback to file search)
+        # Check if Mindbase integration is enabled
+        if not self._is_mindbase_enabled():
+            return None
+
+        # Try to search the mindbase cache file
+        mindbase_cache = self.memory_dir / "mindbase_cache.jsonl"
+        if not mindbase_cache.exists():
+            return None
+
+        # Search for semantically similar entries
+        best_match = None
+        best_score = 0.0
+
+        try:
+            with mindbase_cache.open("r") as f:
+                for line in f:
+                    try:
+                        record = json.loads(line)
+                        stored_signature = record.get("signature", "")
+
+                        # Calculate semantic similarity score
+                        score = self._calculate_similarity(
+                            error_signature, stored_signature
+                        )
+
+                        if score > best_score and score >= 0.6:
+                            best_score = score
+                            best_match = record
+
+                    except json.JSONDecodeError:
+                        continue
+
+        except (OSError, PermissionError):
+            return None
+
+        if best_match:
+            return {
+                "solution": best_match.get("solution"),
+                "root_cause": best_match.get("root_cause"),
+                "prevention": best_match.get("prevention"),
+                "timestamp": best_match.get("timestamp"),
+                "source": "mindbase",
+                "similarity_score": best_score,
+            }
+
         return None
+
+    def _is_mindbase_enabled(self) -> bool:
+        """Check if Mindbase integration is enabled."""
+        return os.environ.get("MINDBASE_ENABLED", "").lower() in ("1", "true", "yes")
+
+    def _calculate_similarity(self, sig1: str, sig2: str) -> float:
+        """
+        Calculate similarity between two error signatures.
+
+        Uses a combination of:
+        - Word overlap (Jaccard similarity)
+        - Key term matching (error types, common patterns)
+
+        Args:
+            sig1: First signature
+            sig2: Second signature
+
+        Returns:
+            float: Similarity score (0.0 - 1.0)
+        """
+        # Normalize signatures
+        words1 = set(sig1.lower().split())
+        words2 = set(sig2.lower().split())
+
+        if not words1 or not words2:
+            return 0.0
+
+        # Jaccard similarity
+        intersection = len(words1 & words2)
+        union = len(words1 | words2)
+        jaccard = intersection / union if union > 0 else 0.0
+
+        # Boost score for matching error types
+        error_types = {
+            "assertionerror",
+            "typeerror",
+            "valueerror",
+            "keyerror",
+            "indexerror",
+            "importerror",
+            "filenotfounderror",
+            "connectionerror",
+            "zerodivisionerror",
+        }
+
+        common_error_types = (words1 & words2) & error_types
+        error_boost = 0.2 if common_error_types else 0.0
+
+        return min(1.0, jaccard + error_boost)
+
+    def store_to_mindbase(self, error_info: Dict[str, Any]) -> bool:
+        """
+        Store error information to Mindbase cache for cross-session learning.
+
+        This method stores the error to a local cache file that can be
+        synced with Mindbase MCP when available.
+
+        Args:
+            error_info: Error information dict
+
+        Returns:
+            bool: True if stored successfully
+        """
+        if not self._is_mindbase_enabled():
+            return False
+
+        mindbase_cache = self.memory_dir / "mindbase_cache.jsonl"
+
+        try:
+            # Create cache entry with signature
+            cache_entry = {
+                "signature": self._create_error_signature(error_info),
+                "error_type": error_info.get("error_type"),
+                "error_message": error_info.get("error_message"),
+                "solution": error_info.get("solution"),
+                "root_cause": error_info.get("root_cause"),
+                "prevention": error_info.get("prevention"),
+                "timestamp": datetime.now().isoformat(),
+                "session_id": os.environ.get("CLAUDE_SESSION_ID", "unknown"),
+            }
+
+            with mindbase_cache.open("a") as f:
+                f.write(json.dumps(cache_entry) + "\n")
+
+            return True
+
+        except (OSError, PermissionError):
+            return False
+
+    def get_cross_session_patterns(self) -> List[Dict[str, Any]]:
+        """
+        Get error patterns learned across sessions.
+
+        Returns:
+            List of error patterns with their solutions
+        """
+        patterns: List[Dict[str, Any]] = []
+
+        mindbase_cache = self.memory_dir / "mindbase_cache.jsonl"
+        if not mindbase_cache.exists():
+            return patterns
+
+        try:
+            with mindbase_cache.open("r") as f:
+                for line in f:
+                    try:
+                        record = json.loads(line)
+                        if record.get("solution"):
+                            patterns.append(
+                                {
+                                    "error_type": record.get("error_type"),
+                                    "pattern": record.get("signature"),
+                                    "solution": record.get("solution"),
+                                    "session_id": record.get("session_id"),
+                                }
+                            )
+                    except json.JSONDecodeError:
+                        continue
+
+        except (OSError, PermissionError):
+            pass
+
+        return patterns
 
     def _search_local_files(self, error_signature: str) -> Optional[Dict[str, Any]]:
         """
