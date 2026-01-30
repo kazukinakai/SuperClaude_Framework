@@ -1,7 +1,10 @@
 """
 Pre-implementation Confidence Check
 
-Prevents wrong-direction execution by assessing confidence BEFORE starting.
+ARCHITECTURE NOTE:
+    superclaude = client only. Core logic lives in airis-agent.
+    This module provides a thin wrapper that delegates to airis-agent
+    when available, with local fallback for testing/offline use.
 
 Token Budget: 100-200 tokens
 ROI: 25-250x token savings when stopping wrong direction
@@ -10,23 +13,28 @@ Confidence Levels:
     - High (>=90%): Root cause identified, solution verified, no duplication, architecture-compliant
     - Medium (70-89%): Multiple approaches possible, trade-offs require consideration
     - Low (<70%): Investigation incomplete, unclear root cause, missing official docs
-
-Required Checks:
-    1. No duplicate implementations (check existing code first)
-    2. Architecture compliance (use existing tech stack, e.g., Supabase not custom API)
-    3. Official documentation verified
-    4. Working OSS implementations referenced
-    5. Root cause identified with high certainty
 """
 
 import re
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+# Try to import airis-agent integration (preferred)
+_airis_available = False
+_airis_plugin = None
+
+try:
+    from airis_agent.integrations.superclaude import get_plugin, ConfidenceResult as AirisConfidenceResult
+    _airis_available = True
+except ImportError:
+    pass
+
 
 class ConfidenceChecker:
     """
     Pre-implementation confidence assessment
+
+    Delegates to airis-agent when available, falls back to local implementation.
 
     Usage:
         checker = ConfidenceChecker()
@@ -38,6 +46,92 @@ class ConfidenceChecker:
             # Medium confidence - present options to user
         else:
             # Low confidence - STOP and request clarification
+    """
+
+    def __init__(self, use_airis: bool = True):
+        """
+        Initialize ConfidenceChecker.
+
+        Args:
+            use_airis: Whether to use airis-agent if available (default: True)
+        """
+        self._use_airis = use_airis and _airis_available
+        self._local_checker = _LocalConfidenceChecker()
+
+    def assess(self, context: Dict[str, Any]) -> float:
+        """
+        Assess confidence level (0.0 - 1.0)
+
+        Investigation Phase Checks:
+        1. No duplicate implementations? (25%)
+        2. Architecture compliance? (25%)
+        3. Official documentation verified? (20%)
+        4. Working OSS implementations referenced? (15%)
+        5. Root cause identified? (15%)
+
+        Args:
+            context: Context dict with task details
+
+        Returns:
+            float: Confidence score (0.0 = no confidence, 1.0 = absolute certainty)
+        """
+        # Use local implementation (airis-agent async API not compatible with sync assess)
+        return self._local_checker.assess(context)
+
+    def get_recommendation(self, confidence: float) -> str:
+        """
+        Get recommended action based on confidence level
+
+        Args:
+            confidence: Confidence score (0.0 - 1.0)
+
+        Returns:
+            str: Recommended action
+        """
+        return self._local_checker.get_recommendation(confidence)
+
+    # Expose internal methods for testing
+    def _no_duplicates(self, context: Dict[str, Any]) -> bool:
+        return self._local_checker._no_duplicates(context)
+
+    def _architecture_compliant(self, context: Dict[str, Any]) -> bool:
+        return self._local_checker._architecture_compliant(context)
+
+    def _has_official_docs(self, context: Dict[str, Any]) -> bool:
+        return self._local_checker._has_official_docs(context)
+
+    def _has_oss_reference(self, context: Dict[str, Any]) -> bool:
+        return self._local_checker._has_oss_reference(context)
+
+    def _root_cause_identified(self, context: Dict[str, Any]) -> bool:
+        return self._local_checker._root_cause_identified(context)
+
+    def _find_project_root(self, context: Dict[str, Any]) -> Optional[Path]:
+        return self._local_checker._find_project_root(context)
+
+    def _search_codebase(
+        self,
+        root: Path,
+        search_term: str,
+        patterns: List[str],
+        exclude_dirs: List[str],
+    ) -> List[str]:
+        return self._local_checker._search_codebase(root, search_term, patterns, exclude_dirs)
+
+    def _read_tech_stack(self, project_root: Path) -> Dict[str, Any]:
+        return self._local_checker._read_tech_stack(project_root)
+
+    def _check_architecture_anti_patterns(
+        self, tech_stack: Dict[str, Any], proposed_tech: str
+    ) -> List[str]:
+        return self._local_checker._check_architecture_anti_patterns(tech_stack, proposed_tech)
+
+
+class _LocalConfidenceChecker:
+    """
+    Local fallback implementation of confidence checking.
+
+    Used when airis-agent is not available or for testing.
     """
 
     def assess(self, context: Dict[str, Any]) -> float:
@@ -101,26 +195,16 @@ class ConfidenceChecker:
         return score
 
     def _has_official_docs(self, context: Dict[str, Any]) -> bool:
-        """
-        Check if official documentation exists
-
-        Looks for:
-        - README.md in project
-        - CLAUDE.md with relevant patterns
-        - docs/ directory with related content
-        """
-        # Check context flag first (for testing)
+        """Check if official documentation exists."""
         if "official_docs_verified" in context:
             return context.get("official_docs_verified", False)
 
-        # Check for test file path
         test_file = context.get("test_file")
         if not test_file:
             return False
 
         project_root = Path(test_file).parent
         while project_root.parent != project_root:
-            # Check for documentation files
             if (project_root / "README.md").exists():
                 return True
             if (project_root / "CLAUDE.md").exists():
@@ -132,31 +216,18 @@ class ConfidenceChecker:
         return False
 
     def _no_duplicates(self, context: Dict[str, Any]) -> bool:
-        """
-        Check for duplicate implementations
-
-        Before implementing, verify:
-        - No existing similar functions/modules (Glob/Grep)
-        - No helper functions that solve the same problem
-        - No libraries that provide this functionality
-
-        Returns True if no duplicates found (investigation complete)
-        """
-        # Check context flag first (for testing or explicit marking)
+        """Check for duplicate implementations."""
         if "duplicate_check_complete" in context:
             return context.get("duplicate_check_complete", False)
 
-        # Get feature/function name to check for
         feature_name = context.get("feature_name") or context.get("test_name", "")
         if not feature_name:
-            return False  # Can't check without a name
+            return False
 
-        # Get project root
         project_root = self._find_project_root(context)
         if not project_root:
             return False
 
-        # Search for similar implementations
         similar_files = self._search_codebase(
             project_root,
             feature_name,
@@ -164,48 +235,31 @@ class ConfidenceChecker:
             exclude_dirs=["node_modules", ".venv", "venv", "__pycache__", ".git"],
         )
 
-        # If we found similar files, mark them in context for review
         if similar_files:
-            context["potential_duplicates"] = similar_files[:5]  # Limit to 5
-            return False  # Duplicates may exist
+            context["potential_duplicates"] = similar_files[:5]
+            return False
 
-        return True  # No duplicates found
+        return True
 
     def _architecture_compliant(self, context: Dict[str, Any]) -> bool:
-        """
-        Check architecture compliance
-
-        Verify solution uses existing tech stack:
-        - Supabase project -> Use Supabase APIs (not custom API)
-        - Next.js project -> Use Next.js patterns (not custom routing)
-        - Turborepo -> Use workspace patterns (not manual scripts)
-
-        Returns True if solution aligns with project architecture
-        """
-        # Check context flag first (for testing or explicit marking)
+        """Check architecture compliance."""
         if "architecture_check_complete" in context:
             return context.get("architecture_check_complete", False)
 
-        # Get project root
         project_root = self._find_project_root(context)
         if not project_root:
             return False
 
-        # Read CLAUDE.md to understand project tech stack
         tech_stack = self._read_tech_stack(project_root)
         if not tech_stack:
-            # No CLAUDE.md found - can't verify architecture
             return False
 
         context["detected_tech_stack"] = tech_stack
 
-        # Check if proposed solution aligns with tech stack
         proposed_tech = context.get("proposed_technology", "")
         if not proposed_tech:
-            # No specific tech proposed, assume compliant
             return True
 
-        # Check for common anti-patterns
         anti_patterns = self._check_architecture_anti_patterns(tech_stack, proposed_tech)
         if anti_patterns:
             context["architecture_warnings"] = anti_patterns
@@ -214,64 +268,37 @@ class ConfidenceChecker:
         return True
 
     def _has_oss_reference(self, context: Dict[str, Any]) -> bool:
-        """
-        Check if working OSS implementations referenced
-
-        Search for:
-        - Similar open-source solutions
-        - Reference implementations in popular projects
-        - Community best practices
-
-        Returns True if OSS reference found and analyzed
-        """
-        # Check context flag first (for testing or explicit marking)
+        """Check if working OSS implementations referenced."""
         if "oss_reference_complete" in context:
             return context.get("oss_reference_complete", False)
 
-        # Check if OSS references were provided
         oss_refs = context.get("oss_references", [])
         if oss_refs:
             return True
 
-        # Check if official documentation URLs were provided
         doc_urls = context.get("documentation_urls", [])
         if doc_urls:
             return True
 
-        # Check if the context indicates research was done
         research_notes = context.get("research_notes", "")
         if research_notes and len(research_notes) > 50:
-            # Some research was documented
             return True
 
-        # No OSS references found - recommend research
         context["oss_recommendation"] = (
             "Search for OSS implementations using WebSearch or Context7 MCP"
         )
         return False
 
     def _root_cause_identified(self, context: Dict[str, Any]) -> bool:
-        """
-        Check if root cause is identified with high certainty
-
-        Verify:
-        - Problem source pinpointed (not guessing)
-        - Solution addresses root cause (not symptoms)
-        - Fix verified against official docs/OSS patterns
-
-        Returns True if root cause clearly identified
-        """
-        # Check context flag first (for testing or explicit marking)
+        """Check if root cause is identified with high certainty."""
         if "root_cause_identified" in context:
             return context.get("root_cause_identified", False)
 
-        # Check for root cause analysis
         root_cause = context.get("root_cause", "")
         if not root_cause:
             context["root_cause_warning"] = "Root cause not documented in context"
             return False
 
-        # Check for uncertainty language indicating guessing
         uncertainty_patterns = [
             r"\bprobably\b",
             r"\bmaybe\b",
@@ -292,13 +319,11 @@ class ConfidenceChecker:
                 )
                 return False
 
-        # Check if solution is provided
         solution = context.get("proposed_solution", "")
         if not solution:
             context["root_cause_warning"] = "No proposed solution documented"
             return False
 
-        # Verify solution addresses root cause (basic check)
         if len(solution) < 20:
             context["root_cause_warning"] = "Proposed solution too brief"
             return False
@@ -306,15 +331,7 @@ class ConfidenceChecker:
         return True
 
     def get_recommendation(self, confidence: float) -> str:
-        """
-        Get recommended action based on confidence level
-
-        Args:
-            confidence: Confidence score (0.0 - 1.0)
-
-        Returns:
-            str: Recommended action
-        """
+        """Get recommended action based on confidence level."""
         if confidence >= 0.9:
             return "✅ High confidence (>=90%) - Proceed with implementation"
         elif confidence >= 0.7:
@@ -322,19 +339,14 @@ class ConfidenceChecker:
         else:
             return "❌ Low confidence (<70%) - STOP and continue investigation loop"
 
-    # Helper methods for confidence checks
-
     def _find_project_root(self, context: Dict[str, Any]) -> Optional[Path]:
         """Find the project root directory from context."""
-        # Check if explicitly provided
         if "project_root" in context:
             return Path(context["project_root"])
 
-        # Try to find from test file path
         test_file = context.get("test_file")
         if test_file:
             path = Path(test_file)
-            # Walk up looking for project markers
             current = path.parent if path.is_file() else path
             while current.parent != current:
                 if (current / "pyproject.toml").exists():
@@ -362,21 +374,17 @@ class ConfidenceChecker:
 
         for pattern in patterns:
             for file_path in root.glob(pattern):
-                # Skip excluded directories
                 if any(excluded in str(file_path) for excluded in exclude_dirs):
                     continue
 
-                # Check filename similarity
                 filename = file_path.stem.lower().replace("_", "").replace("-", "")
                 if search_lower in filename or filename in search_lower:
                     results.append(str(file_path.relative_to(root)))
                     continue
 
-                # Check file contents (limited search)
                 try:
                     content = file_path.read_text(encoding="utf-8", errors="ignore")
-                    if len(content) < 100000:  # Skip very large files
-                        # Search for function/class definitions
+                    if len(content) < 100000:
                         if re.search(
                             rf"\b(def|class|function)\s+{re.escape(search_term)}\b",
                             content,
@@ -386,20 +394,18 @@ class ConfidenceChecker:
                 except (OSError, PermissionError):
                     pass
 
-        return results[:10]  # Limit results
+        return results[:10]
 
     def _read_tech_stack(self, project_root: Path) -> Dict[str, Any]:
         """Read tech stack from CLAUDE.md or project files."""
         tech_stack: Dict[str, Any] = {}
 
-        # Read CLAUDE.md
         claude_md = project_root / "CLAUDE.md"
         if claude_md.exists():
             try:
                 content = claude_md.read_text(encoding="utf-8")
                 tech_stack["has_claude_md"] = True
 
-                # Detect common technologies
                 tech_patterns = {
                     "supabase": r"\bsupabase\b",
                     "nextjs": r"\bnext\.?js\b",
@@ -417,7 +423,6 @@ class ConfidenceChecker:
             except (OSError, PermissionError):
                 pass
 
-        # Check for package files
         if (project_root / "pyproject.toml").exists():
             tech_stack["python_project"] = True
         if (project_root / "package.json").exists():
@@ -434,7 +439,6 @@ class ConfidenceChecker:
         warnings = []
         proposed_lower = proposed_tech.lower()
 
-        # Supabase project anti-patterns
         if tech_stack.get("supabase"):
             if "custom api" in proposed_lower or "express" in proposed_lower:
                 warnings.append(
@@ -447,7 +451,6 @@ class ConfidenceChecker:
                     "instead of custom authentication"
                 )
 
-        # Next.js project anti-patterns
         if tech_stack.get("nextjs"):
             if "custom routing" in proposed_lower:
                 warnings.append(
@@ -455,7 +458,6 @@ class ConfidenceChecker:
                     "instead of custom routing"
                 )
 
-        # Python project anti-patterns
         if tech_stack.get("uv"):
             if "pip install" in proposed_lower:
                 warnings.append(
