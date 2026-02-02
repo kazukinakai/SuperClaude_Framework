@@ -5,7 +5,7 @@
 > This document tracks active development tasks, priorities, and the project backlog.
 > Read this file at the start of each development session to understand what needs to be done.
 
-**Last Updated**: 2026-01-29
+**Last Updated**: 2026-01-31
 
 ---
 
@@ -93,29 +93,57 @@
 
 ---
 
+### ✅ 5. Architecture Compliance Refactoring
+**Status**: DONE (2026-01-31)
+
+**Completed**:
+- [x] Added Architecture Boundaries section to CLAUDE.md
+- [x] Documented superclaude = client only, airis-agent = core logic
+- [x] Refactored confidence.py to thin wrapper + _LocalConfidenceChecker
+- [x] Refactored reflexion.py to thin wrapper + _LocalReflexionPattern
+- [x] Both try airis-agent import first, fallback to local
+- [x] All tests pass (68 passed)
+
+**Commits**: a01f1e2, 65ebbd3
+
+---
+
+### ✅ 6. Fix Docker Mount Issue (#518)
+**Status**: DONE (2026-01-31)
+
+**Issue**: Docker volume mount failed when mcp-config.json didn't exist
+
+**Fix**: Create mcp-config.json before docker compose up
+- Download from upstream example if missing
+- Fix if incorrectly created as directory
+
+**Commit**: 5454cad
+**PR**: #521 (merged to upstream)
+
+---
+
 ## 📋 **Medium Priority (v4.2.0 Minor Release)**
 
 ### 5. Implement Mindbase Integration
-**Status**: TODO
+**Status**: PARTIAL (airis-agent integration ready)
 **File**: `src/superclaude/pm_agent/reflexion.py`
-**Line**: 173
-
-**Issue**: TODO comment for Mindbase MCP integration
 
 **Context**: Reflexion pattern should persist learned errors to Mindbase MCP for cross-session learning
 
-**Acceptance Criteria**:
-- [ ] Research Mindbase MCP API
-- [ ] Implement connection to Mindbase
-- [ ] Add error persistence to Mindbase
-- [ ] Add error retrieval from Mindbase
-- [ ] Make Mindbase optional (graceful degradation)
-- [ ] Add integration tests
+**Completed (2026-01-31)**:
+- [x] Refactored to thin wrapper pattern (airis-agent delegation)
+- [x] Local fallback implementation preserved
+- [x] airis-agent has full Mindbase integration in `integrations/superclaude.py`
+- [x] Mindbase hybrid search improvements deployed (keyword norm, recency, weight norm)
+
+**Remaining**:
+- [ ] Enable airis-agent MCP in production
+- [ ] Add integration tests with live Mindbase
 - [ ] Document usage
 
-**Estimated Effort**: 6-8 hours
+**Estimated Effort**: 2-3 hours (reduced from 6-8)
 **Priority**: MEDIUM
-**Blocked by**: Mindbase MCP availability
+**Blocked by**: airis-agent MCP server deployment
 
 ---
 
