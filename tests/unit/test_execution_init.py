@@ -4,25 +4,19 @@ Tests for Execution Module Init
 Tests intelligent_execute, quick_execute, and safe_execute functions.
 """
 
-import pytest
 import tempfile
 from pathlib import Path
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
+
+import pytest
 
 from superclaude.execution import (
+    ConfidenceScore,
+    ReflectionEngine,
     intelligent_execute,
     quick_execute,
     safe_execute,
-    ReflectionEngine,
-    ParallelExecutor,
-    SelfCorrectionEngine,
-    ConfidenceScore,
-    ExecutionPlan,
-    RootCause,
-    Task,
     should_parallelize,
-    reflect_before_execution,
-    learn_from_failure,
 )
 
 
@@ -259,7 +253,7 @@ class TestSafeExecute:
 
     def test_safe_execute_blocked_raises(self):
         """Test safe execution raises when blocked"""
-        with tempfile.TemporaryDirectory() as tmpdir:
+        with tempfile.TemporaryDirectory():
             with patch.object(
                 ReflectionEngine, "reflect"
             ) as mock_reflect:

@@ -29,7 +29,10 @@ from typing import Any, Dict, List, Optional
 _airis_available = False
 
 try:
-    from airis_agent.integrations.superclaude import get_plugin, get_reflexion_memory
+    from airis_agent.integrations.superclaude import (  # noqa: F401
+        get_plugin,
+        get_reflexion_memory,
+    )
     _airis_available = True
 except ImportError:
     pass

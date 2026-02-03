@@ -4,16 +4,14 @@ Tests for Reflection Engine
 Tests 3-stage pre-execution confidence checking.
 """
 
-import pytest
 import json
 import tempfile
 from pathlib import Path
-from unittest.mock import patch, MagicMock
 
 from superclaude.execution.reflection import (
-    ReflectionResult,
     ConfidenceScore,
     ReflectionEngine,
+    ReflectionResult,
     get_reflection_engine,
     reflect_before_execution,
 )
@@ -369,7 +367,7 @@ class TestSingletonAndConvenience:
 
     def test_reflect_before_execution(self):
         """Test convenience function"""
-        with tempfile.TemporaryDirectory() as tmpdir:
+        with tempfile.TemporaryDirectory():
             import superclaude.execution.reflection as mod
             mod._reflection_engine = None
 

@@ -4,16 +4,15 @@ Tests for Parallel Execution Engine
 Tests automatic parallelization and execution planning.
 """
 
+
 import pytest
-import time
-from unittest.mock import MagicMock, patch
 
 from superclaude.execution.parallel import (
-    Task,
-    TaskStatus,
-    ParallelGroup,
     ExecutionPlan,
     ParallelExecutor,
+    ParallelGroup,
+    Task,
+    TaskStatus,
     parallel_file_operations,
     should_parallelize,
 )

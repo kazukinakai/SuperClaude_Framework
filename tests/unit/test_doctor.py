@@ -4,9 +4,8 @@ Tests for SuperClaude Doctor Command
 Tests health check functionality.
 """
 
-import pytest
-from unittest.mock import patch, MagicMock
 from pathlib import Path
+from unittest.mock import patch
 
 
 class TestDoctor:

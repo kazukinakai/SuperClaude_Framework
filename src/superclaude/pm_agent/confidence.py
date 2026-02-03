@@ -24,7 +24,12 @@ _airis_available = False
 _airis_plugin = None
 
 try:
-    from airis_agent.integrations.superclaude import get_plugin, ConfidenceResult as AirisConfidenceResult
+    from airis_agent.integrations.superclaude import (  # noqa: F401
+        ConfidenceResult as AirisConfidenceResult,
+    )
+    from airis_agent.integrations.superclaude import (  # noqa: F401
+        get_plugin,
+    )
     _airis_available = True
 except ImportError:
     pass

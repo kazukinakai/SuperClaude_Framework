@@ -4,10 +4,10 @@ Tests for SuperClaude CLI Main
 Tests command-line interface functionality.
 """
 
-import pytest
 import tempfile
 from pathlib import Path
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
+
 from click.testing import CliRunner
 
 from superclaude.cli.main import main

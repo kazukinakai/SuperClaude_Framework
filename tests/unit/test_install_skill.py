@@ -4,11 +4,9 @@ Tests for Skill Installation Command
 Tests skill installation functionality.
 """
 
-import pytest
 import tempfile
-import shutil
 from pathlib import Path
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 
 class TestInstallSkill:

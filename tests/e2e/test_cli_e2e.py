@@ -10,9 +10,6 @@ import sys
 import tempfile
 from pathlib import Path
 
-import pytest
-
-
 # Get the venv bin directory where superclaude is installed
 VENV_BIN = Path(sys.executable).parent
 SUPERCLAUDE_CMD = VENV_BIN / "superclaude"

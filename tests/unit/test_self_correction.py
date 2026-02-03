@@ -4,15 +4,14 @@ Tests for Self-Correction Engine
 Tests failure detection, root cause analysis, and learning.
 """
 
-import pytest
 import json
 import tempfile
 from pathlib import Path
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock
 
 from superclaude.execution.self_correction import (
-    RootCause,
     FailureEntry,
+    RootCause,
     SelfCorrectionEngine,
     get_self_correction_engine,
     learn_from_failure,

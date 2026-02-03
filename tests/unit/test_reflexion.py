@@ -504,7 +504,6 @@ class TestMistakeDoc:
         reflexion._create_mistake_doc(error_info)
 
         # Check file was created
-        import os
         files = list(reflexion.mistakes_dir.iterdir())
         assert len(files) == 1
         assert "test_feature" in files[0].name
