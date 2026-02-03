@@ -4,15 +4,14 @@ Tests for Self-Correction Engine
 Tests failure detection, root cause analysis, and learning.
 """
 
-import pytest
 import json
 import tempfile
 from pathlib import Path
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock
 
 from superclaude.execution.self_correction import (
-    RootCause,
     FailureEntry,
+    RootCause,
     SelfCorrectionEngine,
     get_self_correction_engine,
     learn_from_failure,
@@ -481,6 +480,7 @@ class TestSingletonAndConvenience:
         """Test singleton creation"""
         with tempfile.TemporaryDirectory() as tmpdir:
             import superclaude.execution.self_correction as mod
+
             mod._self_correction_engine = None
 
             engine = get_self_correction_engine(Path(tmpdir))
@@ -491,6 +491,7 @@ class TestSingletonAndConvenience:
         """Test convenience function"""
         with tempfile.TemporaryDirectory() as tmpdir:
             import superclaude.execution.self_correction as mod
+
             mod._self_correction_engine = None
 
             # Initialize with temp dir
@@ -537,8 +538,7 @@ class TestFindSimilarFailures:
 
             # Find similar
             similar = engine._find_similar_failures(
-                "Check input validation",
-                "Validation failed"
+                "Check input validation", "Validation failed"
             )
 
             assert len(similar) >= 1

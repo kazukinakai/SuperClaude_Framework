@@ -282,7 +282,7 @@ def init(project_root: str, force: bool):
         sys.exit(1)
 
     # Create CLAUDE.md template
-    template = '''# CLAUDE.md
+    template = """# CLAUDE.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with this project.
 
@@ -320,7 +320,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with th
 ## Additional Notes
 
 <!-- Any other important information for Claude Code -->
-'''
+"""
 
     claude_md.write_text(template)
     click.echo(f"✅ Created CLAUDE.md at {claude_md}")

@@ -4,9 +4,8 @@ Tests for MCP Server Installation Module
 Tests MCP server installation and management functionality.
 """
 
-import pytest
-from unittest.mock import patch, MagicMock
 import subprocess
+from unittest.mock import MagicMock, patch
 
 
 class TestMCPServerRegistry:
@@ -180,7 +179,7 @@ class TestInstallMCPServer:
     @patch("superclaude.cli.install_mcp._run_command")
     def test_install_already_installed(self, mock_run, mock_check):
         """Test skips installation if already installed"""
-        from superclaude.cli.install_mcp import install_mcp_server, MCP_SERVERS
+        from superclaude.cli.install_mcp import MCP_SERVERS, install_mcp_server
 
         mock_check.return_value = True
 
@@ -195,7 +194,7 @@ class TestInstallMCPServer:
     @patch("superclaude.cli.install_mcp._run_command")
     def test_install_dry_run(self, mock_run, mock_check):
         """Test dry run doesn't execute commands"""
-        from superclaude.cli.install_mcp import install_mcp_server, MCP_SERVERS
+        from superclaude.cli.install_mcp import MCP_SERVERS, install_mcp_server
 
         mock_check.return_value = False
 
@@ -209,7 +208,7 @@ class TestInstallMCPServer:
     @patch("superclaude.cli.install_mcp._run_command")
     def test_install_success(self, mock_run, mock_check):
         """Test successful installation"""
-        from superclaude.cli.install_mcp import install_mcp_server, MCP_SERVERS
+        from superclaude.cli.install_mcp import MCP_SERVERS, install_mcp_server
 
         mock_check.return_value = False
         mock_run.return_value = MagicMock(returncode=0, stdout="", stderr="")
@@ -223,7 +222,7 @@ class TestInstallMCPServer:
     @patch("superclaude.cli.install_mcp._run_command")
     def test_install_failure(self, mock_run, mock_check):
         """Test installation failure handling"""
-        from superclaude.cli.install_mcp import install_mcp_server, MCP_SERVERS
+        from superclaude.cli.install_mcp import MCP_SERVERS, install_mcp_server
 
         mock_check.return_value = False
         mock_run.return_value = MagicMock(

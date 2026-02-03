@@ -4,10 +4,10 @@ Tests for SuperClaude CLI Main
 Tests command-line interface functionality.
 """
 
-import pytest
 import tempfile
 from pathlib import Path
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
+
 from click.testing import CliRunner
 
 from superclaude.cli.main import main
@@ -184,9 +184,7 @@ class TestInitCommand:
             existing = Path(tmpdir) / "CLAUDE.md"
             existing.write_text("# Old content")
 
-            result = runner.invoke(
-                main, ["init", "--project-root", tmpdir, "--force"]
-            )
+            result = runner.invoke(main, ["init", "--project-root", tmpdir, "--force"])
 
             assert result.exit_code == 0
             assert "Old content" not in existing.read_text()
@@ -216,7 +214,13 @@ class TestCheckCommand:
         runner = CliRunner()
         result = runner.invoke(
             main,
-            ["check", "-c", "duplicate_check_complete=true", "-c", "has_official_docs=true"],
+            [
+                "check",
+                "-c",
+                "duplicate_check_complete=true",
+                "-c",
+                "has_official_docs=true",
+            ],
         )
 
         assert result.exit_code in [0, 1]

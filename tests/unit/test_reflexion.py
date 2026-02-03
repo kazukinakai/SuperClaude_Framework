@@ -285,8 +285,7 @@ class TestSimilarityCalculation:
         reflexion = ReflexionPattern(memory_dir=temp_memory_dir)
 
         score = reflexion._calculate_similarity(
-            "ValueError invalid input",
-            "ValueError bad input"
+            "ValueError invalid input", "ValueError bad input"
         )
 
         assert 0.0 < score < 1.0
@@ -297,15 +296,11 @@ class TestSimilarityCalculation:
 
         # With matching error type
         score_with = reflexion._calculate_similarity(
-            "assertionerror test",
-            "assertionerror check"
+            "assertionerror test", "assertionerror check"
         )
 
         # Without matching error type
-        score_without = reflexion._calculate_similarity(
-            "test one",
-            "check two"
-        )
+        score_without = reflexion._calculate_similarity("test one", "check two")
 
         # Error type match should boost score
         assert score_with > score_without
@@ -356,11 +351,13 @@ class TestMindbaseIntegration:
 
         reflexion = ReflexionPattern(memory_dir=temp_memory_dir)
 
-        result = reflexion.store_to_mindbase({
-            "error_type": "TestError",
-            "error_message": "Test message",
-            "solution": "Test solution",
-        })
+        result = reflexion.store_to_mindbase(
+            {
+                "error_type": "TestError",
+                "error_message": "Test message",
+                "solution": "Test solution",
+            }
+        )
 
         assert result is True
 
@@ -375,11 +372,13 @@ class TestMindbaseIntegration:
         reflexion = ReflexionPattern(memory_dir=temp_memory_dir)
 
         # Store an error
-        reflexion.store_to_mindbase({
-            "error_type": "ValueError",
-            "error_message": "Invalid input value",
-            "solution": "Validate input before processing",
-        })
+        reflexion.store_to_mindbase(
+            {
+                "error_type": "ValueError",
+                "error_message": "Invalid input value",
+                "solution": "Validate input before processing",
+            }
+        )
 
         # Search for similar error
         result = reflexion._search_mindbase("ValueError invalid input")
@@ -406,11 +405,13 @@ class TestCrossSessionPatterns:
         reflexion = ReflexionPattern(memory_dir=temp_memory_dir)
 
         # Store some patterns
-        reflexion.store_to_mindbase({
-            "error_type": "ImportError",
-            "error_message": "No module named X",
-            "solution": "Install module X",
-        })
+        reflexion.store_to_mindbase(
+            {
+                "error_type": "ImportError",
+                "error_message": "No module named X",
+                "solution": "Install module X",
+            }
+        )
 
         patterns = reflexion.get_cross_session_patterns()
 
@@ -434,11 +435,13 @@ class TestLocalFileSearch:
         reflexion = ReflexionPattern(memory_dir=temp_memory_dir)
 
         # Record an error
-        reflexion.record_error({
-            "error_type": "KeyError",
-            "error_message": "Key 'foo' not found",
-            "solution": "Check if key exists before access",
-        })
+        reflexion.record_error(
+            {
+                "error_type": "KeyError",
+                "error_message": "Key 'foo' not found",
+                "solution": "Check if key exists before access",
+            }
+        )
 
         # Search for similar error
         result = reflexion._search_local_files("KeyError | Key 'foo' not found")
@@ -465,15 +468,19 @@ class TestStatistics:
         reflexion = ReflexionPattern(memory_dir=temp_memory_dir)
 
         # Record some errors
-        reflexion.record_error({
-            "error_type": "Error1",
-            "error_message": "Message 1",
-            "solution": "Fix 1",
-        })
-        reflexion.record_error({
-            "error_type": "Error2",
-            "error_message": "Message 2",
-        })
+        reflexion.record_error(
+            {
+                "error_type": "Error1",
+                "error_message": "Message 1",
+                "solution": "Fix 1",
+            }
+        )
+        reflexion.record_error(
+            {
+                "error_type": "Error2",
+                "error_message": "Message 2",
+            }
+        )
 
         stats = reflexion.get_statistics()
 
@@ -504,7 +511,6 @@ class TestMistakeDoc:
         reflexion._create_mistake_doc(error_info)
 
         # Check file was created
-        import os
         files = list(reflexion.mistakes_dir.iterdir())
         assert len(files) == 1
         assert "test_feature" in files[0].name
@@ -513,11 +519,13 @@ class TestMistakeDoc:
         """Test that record_error creates mistake doc when solution provided"""
         reflexion = ReflexionPattern(memory_dir=temp_memory_dir)
 
-        reflexion.record_error({
-            "test_name": "test_with_solution",
-            "error_type": "ValueError",
-            "solution": "Fix the validation",
-        })
+        reflexion.record_error(
+            {
+                "test_name": "test_with_solution",
+                "error_type": "ValueError",
+                "solution": "Fix the validation",
+            }
+        )
 
         # Mistake doc should be created
         files = list(reflexion.mistakes_dir.iterdir())

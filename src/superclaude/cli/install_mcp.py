@@ -221,15 +221,20 @@ def install_airis_gateway(dry_run: bool = False) -> bool:
             )
             if result.returncode != 0:
                 # Fallback: create minimal config
-                click.echo("   ⚠️  Could not download example config, creating minimal config")
+                click.echo(
+                    "   ⚠️  Could not download example config, creating minimal config"
+                )
                 mcp_config_file.write_text('{"mcpServers": {}}')
         except Exception:
             # Fallback: create minimal config
             mcp_config_file.write_text('{"mcpServers": {}}')
     elif mcp_config_file.is_dir():
         # Fix: mcp-config.json was incorrectly created as a directory
-        click.echo("   🔧 Fixing mcp-config.json (was directory, converting to file)...")
+        click.echo(
+            "   🔧 Fixing mcp-config.json (was directory, converting to file)..."
+        )
         import shutil
+
         shutil.rmtree(mcp_config_file)
         mcp_config_file.write_text('{"mcpServers": {}}')
 

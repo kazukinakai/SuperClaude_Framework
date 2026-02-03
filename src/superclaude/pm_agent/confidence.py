@@ -24,7 +24,13 @@ _airis_available = False
 _airis_plugin = None
 
 try:
-    from airis_agent.integrations.superclaude import get_plugin, ConfidenceResult as AirisConfidenceResult
+    from airis_agent.integrations.superclaude import (  # noqa: F401
+        ConfidenceResult as AirisConfidenceResult,
+    )
+    from airis_agent.integrations.superclaude import (  # noqa: F401
+        get_plugin,
+    )
+
     _airis_available = True
 except ImportError:
     pass
@@ -116,7 +122,9 @@ class ConfidenceChecker:
         patterns: List[str],
         exclude_dirs: List[str],
     ) -> List[str]:
-        return self._local_checker._search_codebase(root, search_term, patterns, exclude_dirs)
+        return self._local_checker._search_codebase(
+            root, search_term, patterns, exclude_dirs
+        )
 
     def _read_tech_stack(self, project_root: Path) -> Dict[str, Any]:
         return self._local_checker._read_tech_stack(project_root)
@@ -124,7 +132,9 @@ class ConfidenceChecker:
     def _check_architecture_anti_patterns(
         self, tech_stack: Dict[str, Any], proposed_tech: str
     ) -> List[str]:
-        return self._local_checker._check_architecture_anti_patterns(tech_stack, proposed_tech)
+        return self._local_checker._check_architecture_anti_patterns(
+            tech_stack, proposed_tech
+        )
 
 
 class _LocalConfidenceChecker:
@@ -260,7 +270,9 @@ class _LocalConfidenceChecker:
         if not proposed_tech:
             return True
 
-        anti_patterns = self._check_architecture_anti_patterns(tech_stack, proposed_tech)
+        anti_patterns = self._check_architecture_anti_patterns(
+            tech_stack, proposed_tech
+        )
         if anti_patterns:
             context["architecture_warnings"] = anti_patterns
             return False

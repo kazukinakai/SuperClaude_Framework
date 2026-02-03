@@ -29,7 +29,11 @@ from typing import Any, Dict, List, Optional
 _airis_available = False
 
 try:
-    from airis_agent.integrations.superclaude import get_plugin, get_reflexion_memory
+    from airis_agent.integrations.superclaude import (  # noqa: F401
+        get_plugin,
+        get_reflexion_memory,
+    )
+
     _airis_available = True
 except ImportError:
     pass
@@ -188,6 +192,7 @@ class _LocalReflexionPattern:
 
         if "error_message" in error_info:
             import re
+
             message = error_info["error_message"]
             message = re.sub(r"\d+", "N", message)
             parts.append(message[:100])

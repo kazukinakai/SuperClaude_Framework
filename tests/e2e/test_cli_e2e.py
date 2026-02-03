@@ -10,9 +10,6 @@ import sys
 import tempfile
 from pathlib import Path
 
-import pytest
-
-
 # Get the venv bin directory where superclaude is installed
 VENV_BIN = Path(sys.executable).parent
 SUPERCLAUDE_CMD = VENV_BIN / "superclaude"
@@ -81,7 +78,15 @@ class TestCLIDoctor:
         # Should mention key components
         assert any(
             keyword in output.lower()
-            for keyword in ["superclaude", "version", "check", "health", "status", "ok", "installed"]
+            for keyword in [
+                "superclaude",
+                "version",
+                "check",
+                "health",
+                "status",
+                "ok",
+                "installed",
+            ]
         )
 
 
@@ -128,7 +133,14 @@ class TestCLIMCP:
         # Should list some MCP servers
         assert any(
             server in output.lower()
-            for server in ["tavily", "context7", "sequential", "serena", "gateway", "airis"]
+            for server in [
+                "tavily",
+                "context7",
+                "sequential",
+                "serena",
+                "gateway",
+                "airis",
+            ]
         )
 
     def test_mcp_help(self):
@@ -152,9 +164,7 @@ class TestCLIHelp:
         result = run_cli("--help")
         output = result.stdout.lower()
         # Should mention main commands
-        assert any(
-            cmd in output for cmd in ["install", "doctor", "mcp"]
-        )
+        assert any(cmd in output for cmd in ["install", "doctor", "mcp"])
 
 
 class TestPytestPluginE2E:
@@ -219,7 +229,9 @@ class TestFullTestSuite:
         assert result.returncode == 0
         assert "passed" in result.stdout.lower()
         # Should not have failures
-        assert "failed" not in result.stdout.lower() or "0 failed" in result.stdout.lower()
+        assert (
+            "failed" not in result.stdout.lower() or "0 failed" in result.stdout.lower()
+        )
 
     def test_all_integration_tests_pass(self):
         """Test all integration tests pass."""

@@ -4,16 +4,14 @@ Tests for Reflection Engine
 Tests 3-stage pre-execution confidence checking.
 """
 
-import pytest
 import json
 import tempfile
 from pathlib import Path
-from unittest.mock import patch, MagicMock
 
 from superclaude.execution.reflection import (
-    ReflectionResult,
     ConfidenceScore,
     ReflectionEngine,
+    ReflectionResult,
     get_reflection_engine,
     reflect_before_execution,
 )
@@ -38,9 +36,7 @@ class TestReflectionResult:
 
     def test_repr_high_score(self):
         """Test repr with high score shows checkmark"""
-        result = ReflectionResult(
-            stage="Test", score=0.9, evidence=[], concerns=[]
-        )
+        result = ReflectionResult(stage="Test", score=0.9, evidence=[], concerns=[])
 
         repr_str = repr(result)
         assert "✅" in repr_str
@@ -48,18 +44,14 @@ class TestReflectionResult:
 
     def test_repr_medium_score(self):
         """Test repr with medium score shows warning"""
-        result = ReflectionResult(
-            stage="Test", score=0.5, evidence=[], concerns=[]
-        )
+        result = ReflectionResult(stage="Test", score=0.5, evidence=[], concerns=[])
 
         repr_str = repr(result)
         assert "⚠️" in repr_str
 
     def test_repr_low_score(self):
         """Test repr with low score shows error"""
-        result = ReflectionResult(
-            stage="Test", score=0.3, evidence=[], concerns=[]
-        )
+        result = ReflectionResult(stage="Test", score=0.3, evidence=[], concerns=[])
 
         repr_str = repr(result)
         assert "❌" in repr_str
@@ -361,6 +353,7 @@ class TestSingletonAndConvenience:
         with tempfile.TemporaryDirectory() as tmpdir:
             # Reset singleton
             import superclaude.execution.reflection as mod
+
             mod._reflection_engine = None
 
             engine = get_reflection_engine(Path(tmpdir))
@@ -369,13 +362,18 @@ class TestSingletonAndConvenience:
 
     def test_reflect_before_execution(self):
         """Test convenience function"""
-        with tempfile.TemporaryDirectory() as tmpdir:
+        with tempfile.TemporaryDirectory():
             import superclaude.execution.reflection as mod
+
             mod._reflection_engine = None
 
             result = reflect_before_execution(
                 "Create validation function",
-                {"project_index": "loaded", "current_branch": "main", "git_status": "clean"}
+                {
+                    "project_index": "loaded",
+                    "current_branch": "main",
+                    "git_status": "clean",
+                },
             )
 
             assert isinstance(result, ConfidenceScore)
@@ -410,8 +408,7 @@ class TestConfidenceThreshold:
             }
 
             result = engine.reflect(
-                "Create a new function called validate_input in utils.py",
-                context
+                "Create a new function called validate_input in utils.py", context
             )
 
             if result.confidence >= 0.7:

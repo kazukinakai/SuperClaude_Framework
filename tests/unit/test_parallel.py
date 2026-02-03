@@ -5,15 +5,13 @@ Tests automatic parallelization and execution planning.
 """
 
 import pytest
-import time
-from unittest.mock import MagicMock, patch
 
 from superclaude.execution.parallel import (
-    Task,
-    TaskStatus,
-    ParallelGroup,
     ExecutionPlan,
     ParallelExecutor,
+    ParallelGroup,
+    Task,
+    TaskStatus,
     parallel_file_operations,
     should_parallelize,
 )
@@ -305,7 +303,12 @@ class TestParallelExecutorIntegration:
             Task("read1", "Read file1", lambda: "c1", []),
             Task("read2", "Read file2", lambda: "c2", []),
             Task("read3", "Read file3", lambda: "c3", []),
-            Task("analyze", "Analyze all", lambda: "analyzed", ["read1", "read2", "read3"]),
+            Task(
+                "analyze",
+                "Analyze all",
+                lambda: "analyzed",
+                ["read1", "read2", "read3"],
+            ),
             Task("edit1", "Edit file1", lambda: "e1", ["analyze"]),
             Task("edit2", "Edit file2", lambda: "e2", ["analyze"]),
         ]
